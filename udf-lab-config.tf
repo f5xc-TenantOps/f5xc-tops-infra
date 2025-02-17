@@ -121,7 +121,12 @@ resource "aws_dynamodb_table_item" "lab_fd6bfa98" {
     group_names     = { L = [
       { S = "xc-lab-users" }
     ]}
-    namespace_roles = { L = [] }
+    namespace_roles = { L = [
+      { M = {
+        namespace = { S = "system" }
+        role      = { S = "xc-lab-mcn-ce" }
+      }}      
+    ] }
     user_ns         = { BOOL = true }
     pre_lambda      = { NULL = true }
     post_lambda     = { NULL = true }

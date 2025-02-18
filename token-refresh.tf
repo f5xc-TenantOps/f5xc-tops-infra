@@ -53,12 +53,6 @@ resource "aws_iam_role_policy_attachment" "token_refresh_lambda_attach" {
   policy_arn = aws_iam_policy.token_refresh_lambda_policy.arn
 }
 
-resource "aws_cloudwatch_event_rule" "token_refresh_schedule" {
-  name                = "tops-token-refresh-mcn-schedule"
-  description         = "Scheduled trigger for token refresh Lambda"
-  schedule_expression = "cron(0 1 * * ? *)"
-}
-
 /*
 MCN Token Refresh Lambda
 */
@@ -83,8 +77,14 @@ resource "aws_lambda_function" "token_refresh_mcn_lambda" {
   tags = local.tags
 }
 
+resource "aws_cloudwatch_event_rule" "token_refresh_mcn_schedule" {
+  name                = "tops-token-refresh-mcn-schedule"
+  description         = "Scheduled trigger for token refresh Lambda"
+  schedule_expression = "rate(12 hours)"
+}
+
 resource "aws_cloudwatch_event_target" "token_refresh_mcn_lambda_target" {
-  rule      = aws_cloudwatch_event_rule.token_refresh_schedule.name
+  rule      = aws_cloudwatch_event_rule.token_refresh_mcn_schedule.name
   target_id = "lambda-target-mcn"
   arn       = aws_lambda_function.token_refresh_mcn_lambda.arn
 }
@@ -94,7 +94,7 @@ resource "aws_lambda_permission" "allow_cloudwatch_token_refresh_mcn" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.token_refresh_mcn_lambda.function_name
   principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.token_refresh_schedule.arn
+  source_arn    = aws_cloudwatch_event_rule.token_refresh_mcn_schedule.arn
 }
 
 /*
@@ -121,8 +121,14 @@ resource "aws_lambda_function" "token_refresh_sec_lambda" {
   tags = local.tags
 }
 
+resource "aws_cloudwatch_event_rule" "token_refresh_sec_schedule" {
+  name                = "tops-token-refresh-sec-schedule"
+  description         = "Scheduled trigger for token refresh Lambda"
+  schedule_expression = "rate(12 hours)"
+}
+
 resource "aws_cloudwatch_event_target" "token_refresh_sec_lambda_target" {
-  rule      = aws_cloudwatch_event_rule.token_refresh_schedule.name
+  rule      = aws_cloudwatch_event_rule.token_refresh_sec_schedule.name
   target_id = "lambda-target-sec"
   arn       = aws_lambda_function.token_refresh_sec_lambda.arn
 }
@@ -132,7 +138,7 @@ resource "aws_lambda_permission" "allow_cloudwatch_token_refresh_sec" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.token_refresh_sec_lambda.function_name
   principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.token_refresh_schedule.arn
+  source_arn    = aws_cloudwatch_event_rule.token_refresh_sec_schedule.arn
 }
 
 /*
@@ -160,8 +166,14 @@ resource "aws_lambda_function" "token_refresh_app_lambda" {
   tags = local.tags
 }
 
+resource "aws_cloudwatch_event_rule" "token_refresh_app_schedule" {
+  name                = "tops-token-refresh-app-schedule"
+  description         = "Scheduled trigger for token refresh Lambda"
+  schedule_expression = "rate(12 hours)"
+}
+
 resource "aws_cloudwatch_event_target" "token_refresh_app_lambda_target" {
-  rule      = aws_cloudwatch_event_rule.token_refresh_schedule.name
+  rule      = aws_cloudwatch_event_rule.token_refresh_app_schedule.name
   target_id = "lambda-target-app"
   arn       = aws_lambda_function.token_refresh_app_lambda.arn
 }
@@ -171,5 +183,5 @@ resource "aws_lambda_permission" "allow_cloudwatch_token_refresh_app" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.token_refresh_app_lambda.function_name
   principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.token_refresh_schedule.arn
+  source_arn    = aws_cloudwatch_event_rule.token_refresh_app_schedule.arn
 }

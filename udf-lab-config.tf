@@ -287,7 +287,12 @@ resource "aws_dynamodb_table_item" "lab_811c573b" {
     group_names     = { L = [
       { S = "xc-lab-users" }
     ]}
-    namespace_roles = { L = [] }
+    namespace_roles = { L = [
+      { M = {
+        namespace = { S = "shared" }
+        role      = { S = "f5xc-waap-monitor" }
+      }}      
+    ] }
     user_ns         = { BOOL = true }
     pre_lambda      = { S = "${aws_lambda_function.caaslab_pre_lambda.arn}" }
     post_lambda     = { NULL = true }
@@ -328,9 +333,9 @@ resource "aws_dynamodb_table_item" "lab_d3c24766" {
 
 resource "aws_s3_object" "lab_info_d3c24766" {
   bucket  = aws_s3_bucket.lab_registry_bucket.bucket
-  key     = "811c573b.yaml"
+  key     = "d3c24766.yaml"
   content = <<EOT
-lab_id: 811c573b
+lab_id: d3c24766
 sqsURL: "${aws_sqs_queue.udf_queue.url}"
 EOT
 

@@ -78,7 +78,7 @@ resource "aws_lambda_function" "token_refresh_mcn_lambda" {
 }
 
 resource "aws_cloudwatch_event_rule" "token_refresh_mcn_schedule" {
-  name                = "tops-token-refresh-mcn-schedule"
+  name                = "tops-token-refresh-mcn-schedule${var.environment == "prod" ? "" : "-${var.environment}"}"
   description         = "Scheduled trigger for token refresh Lambda"
   schedule_expression = "rate(12 hours)"
 }
@@ -122,7 +122,7 @@ resource "aws_lambda_function" "token_refresh_sec_lambda" {
 }
 
 resource "aws_cloudwatch_event_rule" "token_refresh_sec_schedule" {
-  name                = "tops-token-refresh-sec-schedule"
+  name                = "tops-token-refresh-sec-schedule${var.environment == "prod" ? "" : "-${var.environment}"}"
   description         = "Scheduled trigger for token refresh Lambda"
   schedule_expression = "rate(12 hours)"
 }
@@ -167,7 +167,7 @@ resource "aws_lambda_function" "token_refresh_app_lambda" {
 }
 
 resource "aws_cloudwatch_event_rule" "token_refresh_app_schedule" {
-  name                = "tops-token-refresh-app-schedule"
+  name                = "tops-token-refresh-app-schedule${var.environment == "prod" ? "" : "-${var.environment}"}"
   description         = "Scheduled trigger for token refresh Lambda"
   schedule_expression = "rate(12 hours)"
 }

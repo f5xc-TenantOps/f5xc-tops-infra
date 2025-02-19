@@ -341,3 +341,38 @@ EOT
 
   content_type = "text/yaml"
 }
+
+############
+# NGINX One
+##############
+resource "aws_dynamodb_table_item" "lab_8b3bfc3a" {
+  table_name = aws_dynamodb_table.lab_configuration.name
+  hash_key   = "lab_id"
+
+  item = jsonencode({
+    lab_id          = { S = "8b3bfc3a" }
+    description     = { S = "NGINX One Lab" }
+    ssm_base_path   = { S = "/tenantOps${var.environment == "prod" ? "" : "-${var.environment}"}/app-lab" }
+    group_names     = { L = [] }
+    namespace_roles = { L = [
+      { M = {
+        namespace = { S = "default" }
+        role      = { S = "f5xc-nginx-one-user" }
+      }}      
+    ] }
+    user_ns         = { BOOL = false }
+    pre_lambda      = { NULL = true }
+    post_lambda     = { NULL = true }
+  })
+}
+
+resource "aws_s3_object" "lab_info_8b3bfc3a" {
+  bucket  = aws_s3_bucket.lab_registry_bucket.bucket
+  key     = "8b3bfc3a.yaml"
+  content = <<EOT
+lab_id: 8b3bfc3a
+sqsURL: "${aws_sqs_queue.udf_queue.url}"
+EOT
+
+  content_type = "text/yaml"
+}

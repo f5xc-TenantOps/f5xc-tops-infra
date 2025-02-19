@@ -223,7 +223,12 @@ resource "aws_dynamodb_table_item" "lab_648ecc3e" {
     group_names     = { L = [
       { S = "xc-lab-users" }
     ]}
-    namespace_roles = { L = [] }
+    namespace_roles = { L = [
+      { M = {
+        namespace = { S = "shared" }
+        role      = { S = "f5xc-waap-monitor" }
+      }}      
+    ] }
     user_ns         = { BOOL = true }
     pre_lambda      = { S = "${aws_lambda_function.apilab_pre_lambda.arn}" }
     post_lambda     = { NULL = true }
@@ -287,12 +292,7 @@ resource "aws_dynamodb_table_item" "lab_811c573b" {
     group_names     = { L = [
       { S = "xc-lab-users" }
     ]}
-    namespace_roles = { L = [
-      { M = {
-        namespace = { S = "shared" }
-        role      = { S = "f5xc-waap-monitor" }
-      }}      
-    ] }
+    namespace_roles = { L = [] }
     user_ns         = { BOOL = true }
     pre_lambda      = { S = "${aws_lambda_function.caaslab_pre_lambda.arn}" }
     post_lambda     = { NULL = true }
@@ -326,7 +326,7 @@ resource "aws_dynamodb_table_item" "lab_d3c24766" {
     ]}
     namespace_roles = { L = [] }
     user_ns         = { BOOL = true }
-    pre_lambda      = { S = "${aws_lambda_function.caaslab_pre_lambda.arn}" }
+    pre_lambda      = { S = "${aws_lambda_function.waaplab_pre_lambda.arn}" }
     post_lambda     = { NULL = true }
   })
 }

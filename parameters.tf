@@ -4,13 +4,31 @@ variable "mcn_lab_token" {
   sensitive   = true
 }
 
+variable "mcn_lab_token_name" {
+  description = "Access token for the MCN Lab Tenant"
+  type        = string
+  sensitive   = true
+}
+
 variable "app_lab_token" {
   description = "Access token for the App Lab Tenant"
   type        = string
   sensitive   = true
 }
 
+variable "app_lab_token_name" {
+  description = "Access token for the App Lab Tenant"
+  type        = string
+  sensitive   = true
+}
+
 variable "sec_lab_token" {
+  description = "Access token for the Sec Lab Tenant"
+  type        = string
+  sensitive   = true
+}
+
+variable "sec_lab_token_name" {
   description = "Access token for the Sec Lab Tenant"
   type        = string
   sensitive   = true
@@ -36,7 +54,7 @@ module "app_lab_parameters" {
     }
     "${local.app_base_path}/token-name" = {
       type        = "String"
-      value       = "tenant-operations-ldfbcohs"
+      value       = var.app_lab_token_name
     }
     "${local.app_base_path}/token-type" = {
       type        = "String"
@@ -64,7 +82,7 @@ module "mcn_lab_parameters" {
     }
     "${local.mcn_base_path}/token-name" = {
       type        = "String"
-      value       = "tenant-operations-kubdrbpy"
+      value       = var.mcn_lab_token_name
     }
     "${local.mcn_base_path}/token-type" = {
       type        = "String"
@@ -92,7 +110,7 @@ module "sec_lab_parameters" {
     }
     "${local.sec_base_path}/token-name" = {
       type        = "String"
-      value       = "tenant-operations-eawmoood"
+      value       = var.sec_lab_token_name
     }
     "${local.sec_base_path}/token-type" = {
       type        = "String"

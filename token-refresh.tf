@@ -159,7 +159,7 @@ resource "aws_lambda_function" "token_refresh_app_lambda" {
 
   environment {
     variables = {
-      "SSM_BASE_PATH" = "/tenantOps${var.environment == "prod" ? "" : "-${var.environment}"}/sec-lab"
+      "SSM_BASE_PATH" = "/tenantOps${var.environment == "prod" ? "" : "-${var.environment}"}/app-lab"
     }
   }
 

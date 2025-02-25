@@ -54,6 +54,8 @@ resource "aws_iam_policy" "udf_cleaner_lambda_policy" {
           "dynamodb:GetItem",
           "dynamodb:PutItem",
           "dynamodb:UpdateItem",
+          "dynamodb:Scan",
+          "dynamodb:Query",
           "dynamodb:DeleteItem"
         ],
         Resource = aws_dynamodb_table.lab_deployment_state.arn

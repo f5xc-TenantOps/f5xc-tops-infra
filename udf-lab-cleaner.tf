@@ -1,7 +1,7 @@
 
 data "aws_s3_object" "udf_cleaner_zip" {
   bucket = aws_s3_bucket.lambda_bucket.bucket
-  key    = "udf_cleaner${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
+  key    = "udf_clean${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
 }
 
 resource "aws_iam_role" "udf_cleaner_lambda_role" {
@@ -53,7 +53,8 @@ resource "aws_iam_policy" "udf_cleaner_lambda_policy" {
         Action   = [
           "dynamodb:GetItem",
           "dynamodb:PutItem",
-          "dynamodb:UpdateItem"
+          "dynamodb:UpdateItem",
+          "dynamodb:DeleteItem"
         ],
         Resource = aws_dynamodb_table.lab_deployment_state.arn
       }

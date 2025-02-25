@@ -5,7 +5,7 @@ data "aws_s3_object" "udf_cleaner_zip" {
 }
 
 resource "aws_iam_role" "udf_cleaner_lambda_role" {
-  name = "tops-udf-dispatch-role${var.environment == "prod" ? "" : "-${var.environment}"}"
+  name = "tops-udf-cleaner-role${var.environment == "prod" ? "" : "-${var.environment}"}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -23,7 +23,7 @@ resource "aws_iam_role" "udf_cleaner_lambda_role" {
 
 resource "aws_iam_policy" "udf_cleaner_lambda_policy" {
   name        = "udf_cleaner_lambda_policy${var.environment == "prod" ? "" : "-${var.environment}"}"
-  description = "IAM Policy for the UDF dispatch Lambda"
+  description = "IAM Policy for the UDF cleaner Lambda"
 
   policy = jsonencode({
     Version = "2012-10-17",
@@ -32,7 +32,7 @@ resource "aws_iam_policy" "udf_cleaner_lambda_policy" {
       {
         Effect   = "Allow",
         Action   = ["logs:CreateLogStream", "logs:PutLogEvents", "logs:CreateLogGroup"],
-        Resource = "arn:aws:logs:*:*:log-group:/aws/lambda/tops-udf-dispatch*:*"
+        Resource = "arn:aws:logs:*:*:log-group:/aws/lambda/tops-udf-cleaner*:*"
       },
 
       # ✅ Allow Lambda to receive and delete messages from SQS
@@ -68,7 +68,7 @@ resource "aws_iam_role_policy_attachment" "udf_cleaner_lambda_attach" {
 }
 
 resource "aws_lambda_function" "udf_lab_cleaner_lambda" {
-  function_name    = "tops-udf-dispatch${var.environment == "prod" ? "" : "-${var.environment}"}"
+  function_name    = "tops-udf-cleaner${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.udf_cleaner_lambda_role.arn
   runtime          = "python3.11"
   handler          = "function.lambda_handler"
@@ -88,17 +88,10 @@ resource "aws_lambda_function" "udf_lab_cleaner_lambda" {
   tags = local.tags
 }
 
-resource "aws_lambda_event_source_mapping" "udf_cleaner_sqs_trigger" {
-  function_name    = aws_lambda_function.udf_dispatch_lambda.arn
-  event_source_arn = aws_sqs_queue.udf_queue.arn
-  batch_size       = 1  # Ensure processing of one message at a time
-  enabled          = true
-}
-
 resource "aws_cloudwatch_event_rule" "udf_lab_cleaner_schedule" {
   name                = "tops-udf-lab-cleaner-schedule${var.environment == "prod" ? "" : "-${var.environment}"}"
   description         = "Scheduled trigger for UDF Cleaner Lambda"
-  schedule_expression = "rate(30 seconds)"
+  schedule_expression = "rate(1 minute)"
 }
 
 resource "aws_cloudwatch_event_target" "udf_lab_cleaner_lambda_target" {

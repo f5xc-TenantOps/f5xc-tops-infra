@@ -74,7 +74,8 @@ resource "aws_iam_policy" "udf_worker_lambda_policy" {
         Action   = [
           "dynamodb:PutItem",
           "dynamodb:UpdateItem",
-          "dynamodb:GetItem"
+          "dynamodb:GetItem",
+          "dynamodb:Scan"
         ],
         Resource = aws_dynamodb_table.lab_deployment_state.arn
       },

@@ -86,7 +86,15 @@ resource "aws_iam_policy" "udf_worker_lambda_policy" {
         ],
         Resource = aws_dynamodb_table.lab_configuration.arn
       },
-
+      {
+        Effect = "Allow",
+        Action = [
+          "ssm:GetParameter",
+          "ssm:GetParameters",
+          "ssm:GetParametersByPath"
+        ],
+        Resource = "arn:aws:ssm:us-east-1:317124676658:parameter/*"
+      },
       # ✅ Allow Lambda to invoke other Lambda functions
       {
         Effect   = "Allow",

@@ -37,3 +37,8 @@ override.tf.json
 terraform.rc
 
 .DS_Store
+
+# Claude Code
+.claude/
+.beads/
+AGENTS.md

@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: tops-portal
-  labels:
-    app.kubernetes.io/name: tops-portal
-    app.kubernetes.io/part-of: tenantops

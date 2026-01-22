@@ -11,7 +11,8 @@ resource "aws_dynamodb_table" "job_state" {
     type = "S"
   }
 
-  # GSI for querying by dep_id (UDF deployments)
+  # GSI for querying by dep_id (UDF deployments only)
+  # Note: Items without dep_id won't appear in this index (sparse index behavior)
   global_secondary_index {
     name            = "dep_id-index"
     hash_key        = "dep_id"

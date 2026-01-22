@@ -22,6 +22,16 @@ resource "aws_s3_bucket_lifecycle_configuration" "deployment_state_lifecycle" {
   }
 }
 
+resource "aws_s3_bucket_server_side_encryption_configuration" "deployment_state_encryption" {
+  bucket = aws_s3_bucket.deployment_state.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
 resource "aws_s3_bucket_public_access_block" "deployment_state_public_access" {
   bucket = aws_s3_bucket.deployment_state.id
 

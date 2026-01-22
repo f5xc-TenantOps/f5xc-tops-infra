@@ -36,6 +36,29 @@ resource "aws_iam_policy" "utility_lambda_policy" {
         ],
         Resource = "arn:aws:ssm:us-east-1:317124676658:parameter/*"
       },
+      # State persistence: S3 for deployment state
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:PutObject",
+          "s3:GetObject"
+        ]
+        Resource = "${aws_s3_bucket.deployment_state.arn}/*"
+      },
+      # State persistence: DynamoDB for job state
+      {
+        Effect = "Allow"
+        Action = [
+          "dynamodb:PutItem",
+          "dynamodb:GetItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:Query"
+        ]
+        Resource = [
+          aws_dynamodb_table.job_state.arn,
+          "${aws_dynamodb_table.job_state.arn}/index/*"
+        ]
+      },
     ]
   })
 }
@@ -62,6 +85,13 @@ resource "aws_lambda_function" "user_create_lambda" {
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size
 
+  environment {
+    variables = {
+      DEPLOYMENT_STATE_BUCKET = aws_s3_bucket.deployment_state.bucket
+      JOB_STATE_TABLE         = aws_dynamodb_table.job_state.name
+    }
+  }
+
   tags = local.tags
 }
 
@@ -83,6 +113,13 @@ resource "aws_lambda_function" "user_remove_lambda" {
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size
 
+  environment {
+    variables = {
+      DEPLOYMENT_STATE_BUCKET = aws_s3_bucket.deployment_state.bucket
+      JOB_STATE_TABLE         = aws_dynamodb_table.job_state.name
+    }
+  }
+
   tags = local.tags
 }
 
@@ -103,6 +140,13 @@ resource "aws_lambda_function" "ns_create_lambda" {
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size
 
+  environment {
+    variables = {
+      DEPLOYMENT_STATE_BUCKET = aws_s3_bucket.deployment_state.bucket
+      JOB_STATE_TABLE         = aws_dynamodb_table.job_state.name
+    }
+  }
+
   tags = local.tags
 }
 
@@ -122,6 +166,13 @@ resource "aws_lambda_function" "ns_remove_lambda" {
 
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size
+
+  environment {
+    variables = {
+      DEPLOYMENT_STATE_BUCKET = aws_s3_bucket.deployment_state.bucket
+      JOB_STATE_TABLE         = aws_dynamodb_table.job_state.name
+    }
+  }
 
   tags = local.tags
 }

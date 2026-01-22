@@ -1,0 +1,112 @@
+---
+# EventBridge Rule for scheduled loadgen runs - hourly
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Rule
+metadata:
+  name: tops-loadgen-v2-hourly-rule
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: eventbridge-rule
+spec:
+  forProvider:
+    region: us-east-1
+    name: tops-loadgen-v2-hourly
+    description: Triggers loadgen task every hour
+    scheduleExpression: "rate(1 hour)"
+    state: ENABLED
+    tags:
+      Name: tops-loadgen-v2-hourly-rule
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+# EventBridge Target for hourly rule
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Target
+metadata:
+  name: tops-loadgen-v2-hourly-target
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: eventbridge-target
+spec:
+  forProvider:
+    region: us-east-1
+    ruleRef:
+      name: tops-loadgen-v2-hourly-rule
+    targetId: tops-loadgen-v2-task
+    arn: arn:aws:ecs:us-east-1:ACCOUNT_ID:cluster/tops-loadgen-v2-cluster
+    roleArnRef:
+      name: tops-loadgen-v2-events-role
+    ecsTarget:
+      - taskDefinitionArnRef:
+          name: tops-loadgen-v2-task
+        taskCount: 1
+        launchType: FARGATE
+        platformVersion: LATEST
+        networkConfiguration:
+          - assignPublicIp: ENABLED
+            subnets:
+              - subnet-placeholder-1
+              - subnet-placeholder-2
+            securityGroups:
+              - sg-placeholder
+  providerConfigRef:
+    name: default
+---
+# EventBridge Rule for peak hours - every 15 minutes during business hours
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Rule
+metadata:
+  name: tops-loadgen-v2-peak-rule
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: eventbridge-rule
+spec:
+  forProvider:
+    region: us-east-1
+    name: tops-loadgen-v2-peak-hours
+    description: Triggers loadgen task every 15 minutes during peak hours (9am-5pm UTC Mon-Fri)
+    scheduleExpression: "cron(0/15 9-17 ? * MON-FRI *)"
+    state: DISABLED
+    tags:
+      Name: tops-loadgen-v2-peak-rule
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+# EventBridge Target for peak hours rule
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Target
+metadata:
+  name: tops-loadgen-v2-peak-target
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: eventbridge-target
+spec:
+  forProvider:
+    region: us-east-1
+    ruleRef:
+      name: tops-loadgen-v2-peak-rule
+    targetId: tops-loadgen-v2-task-peak
+    arn: arn:aws:ecs:us-east-1:ACCOUNT_ID:cluster/tops-loadgen-v2-cluster
+    roleArnRef:
+      name: tops-loadgen-v2-events-role
+    ecsTarget:
+      - taskDefinitionArnRef:
+          name: tops-loadgen-v2-task
+        taskCount: 1
+        launchType: FARGATE
+        platformVersion: LATEST
+        networkConfiguration:
+          - assignPublicIp: ENABLED
+            subnets:
+              - subnet-placeholder-1
+              - subnet-placeholder-2
+            securityGroups:
+              - sg-placeholder
+  providerConfigRef:
+    name: default

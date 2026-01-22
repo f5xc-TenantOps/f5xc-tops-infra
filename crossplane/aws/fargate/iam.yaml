@@ -1,0 +1,296 @@
+---
+# ECS Task Execution Role - used by ECS agent to pull images and write logs
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Role
+metadata:
+  name: tops-loadgen-v2-execution-role
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: iam-execution-role
+spec:
+  forProvider:
+    assumeRolePolicy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "ecs-tasks.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+          }
+        ]
+      }
+    tags:
+      Name: tops-loadgen-v2-execution-role
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+# Attach AWS managed policy for ECS task execution
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: RolePolicyAttachment
+metadata:
+  name: tops-loadgen-v2-execution-role-policy
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: iam-execution-role
+spec:
+  forProvider:
+    policyArn: arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+    roleRef:
+      name: tops-loadgen-v2-execution-role
+  providerConfigRef:
+    name: default
+---
+# Additional policy for ECR access and CloudWatch Logs
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Policy
+metadata:
+  name: tops-loadgen-v2-execution-policy
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: iam-execution-role
+spec:
+  forProvider:
+    policy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "ecr:GetAuthorizationToken",
+              "ecr:BatchCheckLayerAvailability",
+              "ecr:GetDownloadUrlForLayer",
+              "ecr:BatchGetImage"
+            ],
+            "Resource": "*"
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+              "logs:CreateLogStream",
+              "logs:PutLogEvents"
+            ],
+            "Resource": "arn:aws:logs:us-east-1:*:log-group:/tops/loadgen:*"
+          }
+        ]
+      }
+    tags:
+      Name: tops-loadgen-v2-execution-policy
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: RolePolicyAttachment
+metadata:
+  name: tops-loadgen-v2-execution-policy-attachment
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: iam-execution-role
+spec:
+  forProvider:
+    policyArnRef:
+      name: tops-loadgen-v2-execution-policy
+    roleRef:
+      name: tops-loadgen-v2-execution-role
+  providerConfigRef:
+    name: default
+---
+# ECS Task Role - used by the containers themselves
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Role
+metadata:
+  name: tops-loadgen-v2-task-role
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: iam-task-role
+spec:
+  forProvider:
+    assumeRolePolicy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "ecs-tasks.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+          }
+        ]
+      }
+    tags:
+      Name: tops-loadgen-v2-task-role
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+# Task role policy - permissions for k6 container to access AWS services if needed
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Policy
+metadata:
+  name: tops-loadgen-v2-task-policy
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: iam-task-role
+spec:
+  forProvider:
+    policy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:GetObject",
+              "s3:ListBucket"
+            ],
+            "Resource": [
+              "arn:aws:s3:::tops-loadgen-scripts",
+              "arn:aws:s3:::tops-loadgen-scripts/*"
+            ]
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+              "s3:PutObject"
+            ],
+            "Resource": [
+              "arn:aws:s3:::tops-loadgen-results/*"
+            ]
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+              "ssm:GetParameter",
+              "ssm:GetParameters"
+            ],
+            "Resource": "arn:aws:ssm:us-east-1:*:parameter/tops/loadgen/*"
+          }
+        ]
+      }
+    tags:
+      Name: tops-loadgen-v2-task-policy
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: RolePolicyAttachment
+metadata:
+  name: tops-loadgen-v2-task-policy-attachment
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: iam-task-role
+spec:
+  forProvider:
+    policyArnRef:
+      name: tops-loadgen-v2-task-policy
+    roleRef:
+      name: tops-loadgen-v2-task-role
+  providerConfigRef:
+    name: default
+---
+# EventBridge role to invoke ECS tasks
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Role
+metadata:
+  name: tops-loadgen-v2-events-role
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: iam-events-role
+spec:
+  forProvider:
+    assumeRolePolicy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "events.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+          }
+        ]
+      }
+    tags:
+      Name: tops-loadgen-v2-events-role
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Policy
+metadata:
+  name: tops-loadgen-v2-events-policy
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: iam-events-role
+spec:
+  forProvider:
+    policy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": [
+              "ecs:RunTask"
+            ],
+            "Resource": "*",
+            "Condition": {
+              "ArnLike": {
+                "ecs:cluster": "arn:aws:ecs:us-east-1:*:cluster/tops-loadgen-v2-cluster"
+              }
+            }
+          },
+          {
+            "Effect": "Allow",
+            "Action": "iam:PassRole",
+            "Resource": "*",
+            "Condition": {
+              "StringLike": {
+                "iam:PassedToService": "ecs-tasks.amazonaws.com"
+              }
+            }
+          }
+        ]
+      }
+    tags:
+      Name: tops-loadgen-v2-events-policy
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: RolePolicyAttachment
+metadata:
+  name: tops-loadgen-v2-events-policy-attachment
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: iam-events-role
+spec:
+  forProvider:
+    policyArnRef:
+      name: tops-loadgen-v2-events-policy
+    roleRef:
+      name: tops-loadgen-v2-events-role
+  providerConfigRef:
+    name: default

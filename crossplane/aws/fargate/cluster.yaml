@@ -1,0 +1,43 @@
+---
+apiVersion: ecs.aws.upbound.io/v1beta1
+kind: Cluster
+metadata:
+  name: tops-loadgen-v2-cluster
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: ecs-cluster
+spec:
+  forProvider:
+    region: us-east-1
+    setting:
+      - name: containerInsights
+        value: enabled
+    tags:
+      Name: tops-loadgen-v2-cluster
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+apiVersion: ecs.aws.upbound.io/v1beta1
+kind: ClusterCapacityProviders
+metadata:
+  name: tops-loadgen-v2-capacity-providers
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: capacity-providers
+spec:
+  forProvider:
+    region: us-east-1
+    clusterNameRef:
+      name: tops-loadgen-v2-cluster
+    capacityProviders:
+      - FARGATE
+      - FARGATE_SPOT
+    defaultCapacityProviderStrategy:
+      - capacityProvider: FARGATE_SPOT
+        weight: 1
+        base: 0
+  providerConfigRef:
+    name: default

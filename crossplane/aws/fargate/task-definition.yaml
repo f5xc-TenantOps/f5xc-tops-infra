@@ -1,0 +1,104 @@
+---
+apiVersion: ecs.aws.upbound.io/v1beta1
+kind: TaskDefinition
+metadata:
+  name: tops-loadgen-v2-task
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: task-definition
+spec:
+  forProvider:
+    region: us-east-1
+    family: tops-loadgen-v2
+    requiresCompatibilities:
+      - FARGATE
+    networkMode: awsvpc
+    cpu: "512"
+    memory: "1024"
+    executionRoleArnRef:
+      name: tops-loadgen-v2-execution-role
+    taskRoleArnRef:
+      name: tops-loadgen-v2-task-role
+    containerDefinitions: |
+      [
+        {
+          "name": "tor-sidecar",
+          "image": "ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/tops-tor:latest",
+          "essential": true,
+          "cpu": 128,
+          "memory": 256,
+          "portMappings": [
+            {
+              "containerPort": 9050,
+              "protocol": "tcp"
+            }
+          ],
+          "healthCheck": {
+            "command": ["CMD-SHELL", "curl -s --socks5 localhost:9050 https://check.torproject.org/api/ip | grep -q IsTor || exit 1"],
+            "interval": 30,
+            "timeout": 10,
+            "retries": 3,
+            "startPeriod": 60
+          },
+          "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+              "awslogs-group": "/tops/loadgen",
+              "awslogs-region": "us-east-1",
+              "awslogs-stream-prefix": "tor"
+            }
+          },
+          "environment": [
+            {
+              "name": "TOR_SOCKS_PORT",
+              "value": "9050"
+            }
+          ]
+        },
+        {
+          "name": "k6",
+          "image": "ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/tops-k6:latest",
+          "essential": true,
+          "cpu": 384,
+          "memory": 768,
+          "dependsOn": [
+            {
+              "containerName": "tor-sidecar",
+              "condition": "HEALTHY"
+            }
+          ],
+          "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+              "awslogs-group": "/tops/loadgen",
+              "awslogs-region": "us-east-1",
+              "awslogs-stream-prefix": "k6"
+            }
+          },
+          "environment": [
+            {
+              "name": "K6_SOCKS5_PROXY",
+              "value": "socks5://localhost:9050"
+            },
+            {
+              "name": "K6_OUT",
+              "value": "json=/tmp/results.json"
+            }
+          ],
+          "command": [
+            "run",
+            "--quiet",
+            "/scripts/loadtest.js"
+          ]
+        }
+      ]
+    runtimePlatform:
+      - cpuArchitecture: X86_64
+        operatingSystemFamily: LINUX
+    tags:
+      Name: tops-loadgen-v2-task
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default

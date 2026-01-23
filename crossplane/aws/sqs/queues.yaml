@@ -1,0 +1,86 @@
+---
+# Dead Letter Queue - must be created before main queue
+apiVersion: sqs.aws.upbound.io/v1beta1
+kind: Queue
+metadata:
+  name: tops-udf-dlq-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: sqs-dlq
+spec:
+  forProvider:
+    region: us-east-1
+    messageRetentionSeconds: 259200
+    tags:
+      Name: tops-udf-dlq-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+# Main UDF Queue
+apiVersion: sqs.aws.upbound.io/v1beta1
+kind: Queue
+metadata:
+  name: tops-udf-queue-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: sqs-queue
+spec:
+  forProvider:
+    region: us-east-1
+    messageRetentionSeconds: 60
+    visibilityTimeoutSeconds: 61
+    delaySeconds: 0
+    receiveWaitTimeSeconds: 10
+    tags:
+      Name: tops-udf-queue-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+# Queue Policy for main queue
+apiVersion: sqs.aws.upbound.io/v1beta1
+kind: QueuePolicy
+metadata:
+  name: tops-udf-queue-v2-policy
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: sqs-policy
+spec:
+  forProvider:
+    region: us-east-1
+    queueUrlRef:
+      name: tops-udf-queue-v2
+    policy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Sid": "AllowLambdaReceiveMessage",
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "lambda.amazonaws.com"
+            },
+            "Action": "sqs:ReceiveMessage",
+            "Resource": "*"
+          },
+          {
+            "Sid": "AllowCrossOrgSendMessage",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "sqs:SendMessage",
+            "Resource": "*",
+            "Condition": {
+              "ForAnyValue:StringLike": {
+                "aws:PrincipalOrgPaths": "o-xpyhj4c5kj/*"
+              }
+            }
+          }
+        ]
+      }
+  providerConfigRef:
+    name: default

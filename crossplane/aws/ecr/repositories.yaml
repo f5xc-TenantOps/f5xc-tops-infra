@@ -1,0 +1,110 @@
+---
+# ECR Repository for Tor sidecar image
+apiVersion: ecr.aws.upbound.io/v1beta1
+kind: Repository
+metadata:
+  name: tops-tor
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: ecr-repository
+spec:
+  forProvider:
+    region: us-east-1
+    imageTagMutability: MUTABLE
+    imageScanningConfiguration:
+      - scanOnPush: true
+    tags:
+      Name: tops-tor
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+# Lifecycle policy for tops-tor repository
+apiVersion: ecr.aws.upbound.io/v1beta1
+kind: LifecyclePolicy
+metadata:
+  name: tops-tor-lifecycle
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: ecr-repository
+spec:
+  forProvider:
+    region: us-east-1
+    repositoryRef:
+      name: tops-tor
+    policy: |
+      {
+        "rules": [
+          {
+            "rulePriority": 1,
+            "description": "Keep last 10 images",
+            "selection": {
+              "tagStatus": "any",
+              "countType": "imageCountMoreThan",
+              "countNumber": 10
+            },
+            "action": {
+              "type": "expire"
+            }
+          }
+        ]
+      }
+  providerConfigRef:
+    name: default
+---
+# ECR Repository for k6 load test image
+apiVersion: ecr.aws.upbound.io/v1beta1
+kind: Repository
+metadata:
+  name: tops-k6
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: ecr-repository
+spec:
+  forProvider:
+    region: us-east-1
+    imageTagMutability: MUTABLE
+    imageScanningConfiguration:
+      - scanOnPush: true
+    tags:
+      Name: tops-k6
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+# Lifecycle policy for tops-k6 repository
+apiVersion: ecr.aws.upbound.io/v1beta1
+kind: LifecyclePolicy
+metadata:
+  name: tops-k6-lifecycle
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: ecr-repository
+spec:
+  forProvider:
+    region: us-east-1
+    repositoryRef:
+      name: tops-k6
+    policy: |
+      {
+        "rules": [
+          {
+            "rulePriority": 1,
+            "description": "Keep last 10 images",
+            "selection": {
+              "tagStatus": "any",
+              "countType": "imageCountMoreThan",
+              "countNumber": 10
+            },
+            "action": {
+              "type": "expire"
+            }
+          }
+        ]
+      }
+  providerConfigRef:
+    name: default

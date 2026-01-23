@@ -1,0 +1,88 @@
+---
+apiVersion: dynamodb.aws.upbound.io/v1beta2
+kind: Table
+metadata:
+  name: tops-job-state-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: dynamodb-job-state
+spec:
+  forProvider:
+    region: us-east-1
+    billingMode: PAY_PER_REQUEST
+    hashKey: job_execution_id
+    attribute:
+      - name: job_execution_id
+        type: S
+      - name: dep_id
+        type: S
+      - name: email
+        type: S
+    globalSecondaryIndex:
+      - name: dep_id-index
+        hashKey: dep_id
+        projectionType: ALL
+      - name: email-index
+        hashKey: email
+        projectionType: ALL
+    ttl:
+      attributeName: ttl
+      enabled: true
+    tags:
+      Name: tops-job-state-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: dynamodb.aws.upbound.io/v1beta2
+kind: Table
+metadata:
+  name: tops-udf-lab-deployment-state-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: dynamodb-lab-deployment-state
+spec:
+  forProvider:
+    region: us-east-1
+    billingMode: PAY_PER_REQUEST
+    hashKey: dep_id
+    attribute:
+      - name: dep_id
+        type: S
+    ttl:
+      attributeName: ttl
+      enabled: true
+    streamEnabled: true
+    streamViewType: NEW_AND_OLD_IMAGES
+    tags:
+      Name: tops-udf-lab-deployment-state-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: dynamodb.aws.upbound.io/v1beta2
+kind: Table
+metadata:
+  name: tops-udf-lab-config-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: dynamodb-lab-config
+spec:
+  forProvider:
+    region: us-east-1
+    billingMode: PAY_PER_REQUEST
+    hashKey: lab_id
+    attribute:
+      - name: lab_id
+        type: S
+    tags:
+      Name: tops-udf-lab-config-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default

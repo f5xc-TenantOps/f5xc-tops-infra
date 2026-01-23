@@ -1,0 +1,86 @@
+name: Build Loadgen Containers
+
+on:
+  push:
+    branches:
+      - main
+      - hive
+    paths:
+      - 'containers/**'
+  pull_request:
+    branches:
+      - main
+      - hive
+    paths:
+      - 'containers/**'
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  build-tor:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push tor container
+        uses: docker/build-push-action@v5
+        with:
+          context: containers/tor
+          push: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/hive' }}
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/tops-tor:latest
+            ${{ steps.login-ecr.outputs.registry }}/tops-tor:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  build-k6:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push k6 container
+        uses: docker/build-push-action@v5
+        with:
+          context: containers/k6
+          push: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/hive' }}
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/tops-k6:latest
+            ${{ steps.login-ecr.outputs.registry }}/tops-k6:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

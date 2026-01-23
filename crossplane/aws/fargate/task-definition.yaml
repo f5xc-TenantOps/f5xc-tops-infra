@@ -83,6 +83,10 @@ spec:
             {
               "name": "K6_OUT",
               "value": "json=/tmp/results.json"
+            },
+            {
+              "name": "RESULTS_BUCKET",
+              "value": "tops-loadgen-results"
             }
           ],
           "command": [

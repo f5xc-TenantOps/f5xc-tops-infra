@@ -1,0 +1,115 @@
+---
+# Bucket 1: tops-loadgen-scripts
+# For k6 test scripts used by loadgen infrastructure
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: Bucket
+metadata:
+  name: tops-loadgen-scripts
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: s3-bucket
+spec:
+  forProvider:
+    region: us-east-1
+    tags:
+      Name: tops-loadgen-scripts
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketVersioning
+metadata:
+  name: tops-loadgen-scripts-versioning
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: s3-bucket
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: tops-loadgen-scripts
+    versioningConfiguration:
+      - status: Enabled
+  providerConfigRef:
+    name: default
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketPublicAccessBlock
+metadata:
+  name: tops-loadgen-scripts-public-access
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: s3-bucket
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: tops-loadgen-scripts
+    blockPublicAcls: true
+    blockPublicPolicy: true
+    ignorePublicAcls: true
+    restrictPublicBuckets: true
+  providerConfigRef:
+    name: default
+---
+# Bucket 2: tops-loadgen-results
+# For k6 output and load test results
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: Bucket
+metadata:
+  name: tops-loadgen-results
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: s3-bucket
+spec:
+  forProvider:
+    region: us-east-1
+    tags:
+      Name: tops-loadgen-results
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketLifecycleConfiguration
+metadata:
+  name: tops-loadgen-results-lifecycle
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: s3-bucket
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: tops-loadgen-results
+    rule:
+      - id: expire-after-90-days
+        status: Enabled
+        expiration:
+          - days: 90
+  providerConfigRef:
+    name: default
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketPublicAccessBlock
+metadata:
+  name: tops-loadgen-results-public-access
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: s3-bucket
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: tops-loadgen-results
+    blockPublicAcls: true
+    blockPublicPolicy: true
+    ignorePublicAcls: true
+    restrictPublicBuckets: true
+  providerConfigRef:
+    name: default

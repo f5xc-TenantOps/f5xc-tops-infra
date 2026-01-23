@@ -1,0 +1,46 @@
+---
+# Security group for Fargate loadgen tasks
+# Note: VPC ID needs to be configured - replace vpc-XXXXXXXXX with actual VPC ID
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: SecurityGroup
+metadata:
+  name: tops-loadgen-v2-sg
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: security-group
+spec:
+  forProvider:
+    region: us-east-1
+    name: tops-loadgen-v2-sg
+    description: Security group for loadgen Fargate tasks
+    # TODO: Configure VPC ID - uncomment and set the actual VPC ID
+    # vpcId: vpc-XXXXXXXXX
+    tags:
+      Name: tops-loadgen-v2-sg
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: SecurityGroupRule
+metadata:
+  name: tops-loadgen-v2-egress
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: security-group
+spec:
+  forProvider:
+    region: us-east-1
+    type: egress
+    fromPort: 0
+    toPort: 0
+    protocol: "-1"
+    cidrBlocks:
+      - "0.0.0.0/0"
+    securityGroupIdRef:
+      name: tops-loadgen-v2-sg
+    description: Allow all outbound traffic
+  providerConfigRef:
+    name: default

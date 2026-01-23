@@ -7,6 +7,7 @@ resources:
   - iam.yaml
   - log-group.yaml
   - scheduled-rules.yaml
+  - network.yaml
 
 # Account ID replacement handled via ArgoCD ApplicationSet or Crossplane composition
 # Configure AWS_ACCOUNT_ID in ArgoCD or use sed replacement in CI

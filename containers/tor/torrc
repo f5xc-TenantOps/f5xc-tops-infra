@@ -1,0 +1,15 @@
+# Tor SOCKS proxy configuration for loadgen
+SocksPort 0.0.0.0:9050
+SocksPolicy accept *
+
+# Disable exit relay (we only use as client)
+ExitRelay 0
+
+# Logging
+Log notice stdout
+
+# Data directory
+DataDirectory /var/lib/tor
+
+# Disable control port (not needed)
+ControlPort 0

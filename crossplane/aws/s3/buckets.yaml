@@ -16,7 +16,6 @@ spec:
       Environment: production
       ManagedBy: crossplane
       Application: tops-core
-      GitOps: verified
   providerConfigRef:
     name: default
 ---

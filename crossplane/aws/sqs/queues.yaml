@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/component: sqs-dlq
 spec:
   forProvider:
+    name: tops-udf-dlq-v2
     region: us-east-1
     messageRetentionSeconds: 259200
     tags:
@@ -29,6 +30,7 @@ metadata:
     app.kubernetes.io/component: sqs-queue
 spec:
   forProvider:
+    name: tops-udf-queue-v2
     region: us-east-1
     messageRetentionSeconds: 60
     visibilityTimeoutSeconds: 61

@@ -39,6 +39,9 @@ for lambda in "${LAMBDAS[@]}"; do
     # Copy shared module
     cp -r "${JOB_WORKERS_DIR}/shared" "${TEMP_DIR}/"
 
+    # Install shared dependencies (requests is used by xc_client but not in Lambda runtime)
+    pip install requests -t "${TEMP_DIR}" -q --no-cache-dir 2>/dev/null
+
     # Create zip
     ZIP_FILE="${lambda}_v2.zip"
     (cd "${TEMP_DIR}" && zip -r "${ZIP_FILE}" . -x "*.pyc" -x "__pycache__/*")

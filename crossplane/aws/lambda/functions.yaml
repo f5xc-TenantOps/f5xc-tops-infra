@@ -8,7 +8,6 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
-    functionName: tops-udf-dispatch-v2
     runtime: python3.11
     handler: function.lambda_handler
     timeout: 60
@@ -38,7 +37,6 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
-    functionName: tops-udf-worker-v2
     runtime: python3.11
     handler: function.lambda_handler
     timeout: 60
@@ -74,7 +72,6 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
-    functionName: tops-ns-create-v2
     runtime: python3.11
     handler: function.lambda_handler
     timeout: 60
@@ -100,7 +97,6 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
-    functionName: tops-ns-remove-v2
     runtime: python3.11
     handler: function.lambda_handler
     timeout: 60
@@ -126,7 +122,6 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
-    functionName: tops-user-create-v2
     runtime: python3.11
     handler: function.lambda_handler
     timeout: 60
@@ -152,7 +147,6 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
-    functionName: tops-user-remove-v2
     runtime: python3.11
     handler: function.lambda_handler
     timeout: 60

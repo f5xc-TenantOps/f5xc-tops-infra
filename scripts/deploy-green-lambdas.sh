@@ -9,12 +9,20 @@ REGION="us-east-1"
 JOB_WORKERS_DIR="${JOB_WORKERS_DIR:-/home/coder/f5xc-tops-job-workers}"
 
 LAMBDAS=(
+    # Crossplane-managed Lambdas
     "udf_dispatch"
     "udf_worker"
     "ns_create"
     "ns_remove"
     "user_create"
     "user_remove"
+    # Step Functions pipeline Lambdas
+    "fetch_job_config"
+    "resource_orchestrator"
+    "stream_to_stepfunction"
+    "origin_pool_create"
+    "http_lb_create"
+    "waf_policy_create"
 )
 
 echo "=== Deploying Green Lambda Functions ==="

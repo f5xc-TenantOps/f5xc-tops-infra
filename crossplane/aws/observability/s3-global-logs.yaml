@@ -131,3 +131,82 @@ spec:
       }
   providerConfigRef:
     name: default
+---
+# SQS queue for S3 event notifications (consumed by Vector)
+apiVersion: sqs.aws.upbound.io/v1beta1
+kind: Queue
+metadata:
+  name: f5xc-tops-global-logs-notifications
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: sqs-log-notifications
+spec:
+  forProvider:
+    name: f5xc-tops-global-logs-notifications
+    region: us-east-1
+    messageRetentionSeconds: 86400
+    visibilityTimeoutSeconds: 300
+    tags:
+      Name: f5xc-tops-global-logs-notifications
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-observability
+  providerConfigRef:
+    name: default
+---
+# SQS queue policy allowing S3 to send notifications
+apiVersion: sqs.aws.upbound.io/v1beta1
+kind: QueuePolicy
+metadata:
+  name: f5xc-tops-global-logs-notifications-policy
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: sqs-log-notifications
+spec:
+  forProvider:
+    region: us-east-1
+    queueUrlRef:
+      name: f5xc-tops-global-logs-notifications
+    policy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Sid": "AllowS3SendMessage",
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "s3.amazonaws.com"
+            },
+            "Action": "sqs:SendMessage",
+            "Resource": "arn:aws:sqs:us-east-1:430171053948:f5xc-tops-global-logs-notifications",
+            "Condition": {
+              "ArnEquals": {
+                "aws:SourceArn": "arn:aws:s3:::f5xc-tops-global-logs"
+              }
+            }
+          }
+        ]
+      }
+  providerConfigRef:
+    name: default
+---
+# S3 bucket notification to send events to SQS
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketNotification
+metadata:
+  name: f5xc-tops-global-logs-notification
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: s3-global-logs
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: f5xc-tops-global-logs
+    queue:
+      - events:
+          - s3:ObjectCreated:*
+        queueArnRef:
+          name: f5xc-tops-global-logs-notifications
+  providerConfigRef:
+    name: default

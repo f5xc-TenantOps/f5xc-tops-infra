@@ -36,7 +36,7 @@ spec:
   providerConfigRef:
     name: default
 ---
-# Policy granting S3 read access to the global-logs bucket
+# Policy granting S3 read and SQS consume access for log ingestion
 apiVersion: iam.aws.upbound.io/v1beta1
 kind: Policy
 metadata:
@@ -67,6 +67,18 @@ spec:
               "s3:GetObjectVersion"
             ],
             "Resource": "arn:aws:s3:::f5xc-tops-global-logs/*"
+          },
+          {
+            "Sid": "SQSConsume",
+            "Effect": "Allow",
+            "Action": [
+              "sqs:ReceiveMessage",
+              "sqs:DeleteMessage",
+              "sqs:GetQueueAttributes",
+              "sqs:GetQueueUrl",
+              "sqs:ChangeMessageVisibility"
+            ],
+            "Resource": "arn:aws:sqs:us-east-1:430171053948:f5xc-tops-global-logs-notifications"
           }
         ]
       }

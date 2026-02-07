@@ -50,11 +50,11 @@ spec:
         platformVersion: LATEST
         networkConfiguration:
           - assignPublicIp: true
-            subnetRefs:
-              - name: tops-loadgen-v2-subnet-a
-              - name: tops-loadgen-v2-subnet-b
-            securityGroupRefs:
-              - name: tops-loadgen-v2-sg
+            subnets:
+              - subnet-0d863abbef28517cf
+              - subnet-05047864d07ea8084
+            securityGroups:
+              - sg-06c3a1a4f15f69638
   providerConfigRef:
     name: default
 ---
@@ -109,10 +109,10 @@ spec:
         platformVersion: LATEST
         networkConfiguration:
           - assignPublicIp: true
-            subnetRefs:
-              - name: tops-loadgen-v2-subnet-a
-              - name: tops-loadgen-v2-subnet-b
-            securityGroupRefs:
-              - name: tops-loadgen-v2-sg
+            subnets:
+              - subnet-0d863abbef28517cf
+              - subnet-05047864d07ea8084
+            securityGroups:
+              - sg-06c3a1a4f15f69638
   providerConfigRef:
     name: default

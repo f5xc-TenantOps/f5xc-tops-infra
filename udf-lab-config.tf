@@ -320,11 +320,11 @@ resource "aws_dynamodb_table_item" "lab_811c6767" {
   })
 }
 
-resource "aws_s3_object" "lab_info_811c573b" {
+resource "aws_s3_object" "lab_info_811c6767" {
   bucket  = aws_s3_bucket.lab_registry_bucket.bucket
-  key     = "811c573b.yaml"
+  key     = "811c6767.yaml"
   content = <<EOT
-lab_id: 811c573b
+lab_id: 811c6767
 sqsURL: "${aws_sqs_queue.udf_queue.url}"
 EOT
 

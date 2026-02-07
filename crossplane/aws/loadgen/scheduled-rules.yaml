@@ -43,8 +43,7 @@ spec:
     roleArnRef:
       name: tops-loadgen-v2-events-role
     ecsTarget:
-      - taskDefinitionArnRef:
-          name: tops-loadgen-v2-task
+      - taskDefinitionArn: arn:aws:ecs:us-east-1:430171053948:task-definition/tops-loadgen-v2:1
         taskCount: 1
         launchType: FARGATE
         platformVersion: LATEST
@@ -102,8 +101,7 @@ spec:
     roleArnRef:
       name: tops-loadgen-v2-events-role
     ecsTarget:
-      - taskDefinitionArnRef:
-          name: tops-loadgen-v2-task
+      - taskDefinitionArn: arn:aws:ecs:us-east-1:430171053948:task-definition/tops-loadgen-v2:1
         taskCount: 1
         launchType: FARGATE
         platformVersion: LATEST

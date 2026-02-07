@@ -43,8 +43,7 @@ spec:
     functionNameRef:
       name: tops-cert-mgmt-mcn-v2
     principal: s3.amazonaws.com
-    sourceArnRef:
-      name: tops-cert-bucket-v2
+    sourceArn: arn:aws:s3:::tops-cert-bucket-v2
     statementId: MCN-AllowExecutionFromS3-v2
   providerConfigRef:
     name: default
@@ -63,8 +62,7 @@ spec:
     functionNameRef:
       name: tops-cert-mgmt-app-v2
     principal: s3.amazonaws.com
-    sourceArnRef:
-      name: tops-cert-bucket-v2
+    sourceArn: arn:aws:s3:::tops-cert-bucket-v2
     statementId: App-AllowExecutionFromS3-v2
   providerConfigRef:
     name: default
@@ -83,8 +81,7 @@ spec:
     functionNameRef:
       name: tops-cert-mgmt-sec-v2
     principal: s3.amazonaws.com
-    sourceArnRef:
-      name: tops-cert-bucket-v2
+    sourceArn: arn:aws:s3:::tops-cert-bucket-v2
     statementId: SEC-AllowExecutionFromS3-v2
   providerConfigRef:
     name: default

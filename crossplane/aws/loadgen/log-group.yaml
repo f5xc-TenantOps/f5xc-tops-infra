@@ -3,13 +3,14 @@ apiVersion: cloudwatchlogs.aws.upbound.io/v1beta1
 kind: Group
 metadata:
   name: tops-loadgen-v2-log-group
+  annotations:
+    crossplane.io/external-name: /tops/loadgen
   labels:
     app.kubernetes.io/name: tops-loadgen-v2
     app.kubernetes.io/component: cloudwatch-logs
 spec:
   forProvider:
     region: us-east-1
-    name: /tops/loadgen
     retentionInDays: 30
     tags:
       Name: tops-loadgen-v2-log-group

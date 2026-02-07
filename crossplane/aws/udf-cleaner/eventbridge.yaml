@@ -10,7 +10,6 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
-    name: tops-udf-cleaner-schedule-v2
     description: Scheduled trigger for UDF Cleaner Lambda (every minute)
     scheduleExpression: "rate(1 minute)"
     state: ENABLED
@@ -54,8 +53,7 @@ spec:
     functionNameRef:
       name: tops-udf-cleaner-v2
     principal: events.amazonaws.com
-    sourceArnRef:
-      name: tops-udf-cleaner-schedule-v2
+    sourceArn: arn:aws:events:us-east-1:430171053948:rule/tops-udf-cleaner-schedule-v2
     statementId: AllowExecutionFromCloudWatch-v2
   providerConfigRef:
     name: default

@@ -8,7 +8,6 @@ metadata:
     app.kubernetes.io/component: token-refresh-eventbridge
 spec:
   forProvider:
-    name: tops-token-refresh-mcn-schedule-v2
     region: us-east-1
     scheduleExpression: "rate(12 hours)"
     state: ENABLED
@@ -29,7 +28,6 @@ metadata:
     app.kubernetes.io/component: token-refresh-eventbridge
 spec:
   forProvider:
-    name: tops-token-refresh-app-schedule-v2
     region: us-east-1
     scheduleExpression: "rate(12 hours)"
     state: ENABLED
@@ -50,7 +48,6 @@ metadata:
     app.kubernetes.io/component: token-refresh-eventbridge
 spec:
   forProvider:
-    name: tops-token-refresh-sec-schedule-v2
     region: us-east-1
     scheduleExpression: "rate(12 hours)"
     state: ENABLED
@@ -127,8 +124,7 @@ spec:
     functionNameRef:
       name: tops-token-refresh-mcn-v2
     principal: events.amazonaws.com
-    sourceArnRef:
-      name: tops-token-refresh-mcn-schedule-v2
+    sourceArn: arn:aws:events:us-east-1:430171053948:rule/tops-token-refresh-mcn-schedule-v2
     statementId: AllowExecutionFromCloudWatch-mcn-v2
   providerConfigRef:
     name: default
@@ -147,8 +143,7 @@ spec:
     functionNameRef:
       name: tops-token-refresh-app-v2
     principal: events.amazonaws.com
-    sourceArnRef:
-      name: tops-token-refresh-app-schedule-v2
+    sourceArn: arn:aws:events:us-east-1:430171053948:rule/tops-token-refresh-app-schedule-v2
     statementId: AllowExecutionFromCloudWatch-app-v2
   providerConfigRef:
     name: default
@@ -167,8 +162,7 @@ spec:
     functionNameRef:
       name: tops-token-refresh-sec-v2
     principal: events.amazonaws.com
-    sourceArnRef:
-      name: tops-token-refresh-sec-schedule-v2
+    sourceArn: arn:aws:events:us-east-1:430171053948:rule/tops-token-refresh-sec-schedule-v2
     statementId: AllowExecutionFromCloudWatch-sec-v2
   providerConfigRef:
     name: default

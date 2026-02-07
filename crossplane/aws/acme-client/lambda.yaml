@@ -10,7 +10,6 @@ metadata:
     app.kubernetes.io/component: acme-client-lambda
 spec:
   forProvider:
-    functionName: tops-acme-client-mcn-v2
     region: us-east-1
     runtime: python3.11
     handler: function.lambda_handler
@@ -45,7 +44,6 @@ metadata:
     app.kubernetes.io/component: acme-client-lambda
 spec:
   forProvider:
-    functionName: tops-acme-client-app-v2
     region: us-east-1
     runtime: python3.11
     handler: function.lambda_handler
@@ -80,7 +78,6 @@ metadata:
     app.kubernetes.io/component: acme-client-lambda
 spec:
   forProvider:
-    functionName: tops-acme-client-sec-v2
     region: us-east-1
     runtime: python3.11
     handler: function.lambda_handler

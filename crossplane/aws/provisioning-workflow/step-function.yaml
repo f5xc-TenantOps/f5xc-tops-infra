@@ -9,7 +9,6 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
-    name: tops-provisioning-workflow-v2
     roleArnRef:
       name: tops-provisioning-sfn-role-v2
     loggingConfiguration:

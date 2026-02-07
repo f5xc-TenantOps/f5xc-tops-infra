@@ -8,7 +8,6 @@ metadata:
     app.kubernetes.io/component: acme-client-eventbridge
 spec:
   forProvider:
-    name: tops-acme-daily-trigger-v2
     description: Triggers ACME Client Lambdas daily
     region: us-east-1
     scheduleExpression: "rate(1 day)"
@@ -86,8 +85,7 @@ spec:
     functionNameRef:
       name: tops-acme-client-mcn-v2
     principal: events.amazonaws.com
-    sourceArnRef:
-      name: tops-acme-daily-trigger-v2
+    sourceArn: arn:aws:events:us-east-1:430171053948:rule/tops-acme-daily-trigger-v2
     statementId: MCN-AllowExecutionFromEventBridge-v2
   providerConfigRef:
     name: default
@@ -106,8 +104,7 @@ spec:
     functionNameRef:
       name: tops-acme-client-app-v2
     principal: events.amazonaws.com
-    sourceArnRef:
-      name: tops-acme-daily-trigger-v2
+    sourceArn: arn:aws:events:us-east-1:430171053948:rule/tops-acme-daily-trigger-v2
     statementId: App-AllowExecutionFromEventBridge-v2
   providerConfigRef:
     name: default
@@ -126,8 +123,7 @@ spec:
     functionNameRef:
       name: tops-acme-client-sec-v2
     principal: events.amazonaws.com
-    sourceArnRef:
-      name: tops-acme-daily-trigger-v2
+    sourceArn: arn:aws:events:us-east-1:430171053948:rule/tops-acme-daily-trigger-v2
     statementId: Sec-AllowExecutionFromEventBridge-v2
   providerConfigRef:
     name: default

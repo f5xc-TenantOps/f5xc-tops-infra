@@ -9,15 +9,16 @@ apiVersion: ssm.aws.upbound.io/v1beta1
 kind: Parameter
 metadata:
   name: tops-ssm-app-lab-tenant-url-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/app-lab/tenant-url
   labels:
     app.kubernetes.io/name: tops-core-v2
     app.kubernetes.io/component: ssm-parameters
 spec:
   forProvider:
     region: us-east-1
-    name: /tenantOps-v2/app-lab/tenant-url
     type: String
-    value: "https://f5-xc-lab-app.console.ves.volterra.io"
+    insecureValue: "https://f5-xc-lab-app.console.ves.volterra.io"
     tags:
       Name: tops-ssm-app-lab-tenant-url-v2
       Environment: production
@@ -30,15 +31,16 @@ apiVersion: ssm.aws.upbound.io/v1beta1
 kind: Parameter
 metadata:
   name: tops-ssm-app-lab-idm-type-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/app-lab/idm-type
   labels:
     app.kubernetes.io/name: tops-core-v2
     app.kubernetes.io/component: ssm-parameters
 spec:
   forProvider:
     region: us-east-1
-    name: /tenantOps-v2/app-lab/idm-type
     type: String
-    value: "SSO"
+    insecureValue: "SSO"
     tags:
       Name: tops-ssm-app-lab-idm-type-v2
       Environment: production
@@ -51,13 +53,14 @@ apiVersion: ssm.aws.upbound.io/v1beta1
 kind: Parameter
 metadata:
   name: tops-ssm-app-lab-token-name-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/app-lab/token-name
   labels:
     app.kubernetes.io/name: tops-core-v2
     app.kubernetes.io/component: ssm-parameters
 spec:
   forProvider:
     region: us-east-1
-    name: /tenantOps-v2/app-lab/token-name
     type: String
     valueSecretRef:
       key: value
@@ -75,15 +78,16 @@ apiVersion: ssm.aws.upbound.io/v1beta1
 kind: Parameter
 metadata:
   name: tops-ssm-app-lab-token-type-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/app-lab/token-type
   labels:
     app.kubernetes.io/name: tops-core-v2
     app.kubernetes.io/component: ssm-parameters
 spec:
   forProvider:
     region: us-east-1
-    name: /tenantOps-v2/app-lab/token-type
     type: String
-    value: "svccred"
+    insecureValue: "svccred"
     tags:
       Name: tops-ssm-app-lab-token-type-v2
       Environment: production
@@ -96,13 +100,14 @@ apiVersion: ssm.aws.upbound.io/v1beta1
 kind: Parameter
 metadata:
   name: tops-ssm-app-lab-token-value-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/app-lab/token-value
   labels:
     app.kubernetes.io/name: tops-core-v2
     app.kubernetes.io/component: ssm-parameters
 spec:
   forProvider:
     region: us-east-1
-    name: /tenantOps-v2/app-lab/token-value
     type: SecureString
     valueSecretRef:
       key: value
@@ -124,15 +129,16 @@ apiVersion: ssm.aws.upbound.io/v1beta1
 kind: Parameter
 metadata:
   name: tops-ssm-mcn-lab-tenant-url-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/mcn-lab/tenant-url
   labels:
     app.kubernetes.io/name: tops-core-v2
     app.kubernetes.io/component: ssm-parameters
 spec:
   forProvider:
     region: us-east-1
-    name: /tenantOps-v2/mcn-lab/tenant-url
     type: String
-    value: "https://f5-xc-lab-mcn.console.ves.volterra.io"
+    insecureValue: "https://f5-xc-lab-mcn.console.ves.volterra.io"
     tags:
       Name: tops-ssm-mcn-lab-tenant-url-v2
       Environment: production
@@ -145,15 +151,16 @@ apiVersion: ssm.aws.upbound.io/v1beta1
 kind: Parameter
 metadata:
   name: tops-ssm-mcn-lab-idm-type-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/mcn-lab/idm-type
   labels:
     app.kubernetes.io/name: tops-core-v2
     app.kubernetes.io/component: ssm-parameters
 spec:
   forProvider:
     region: us-east-1
-    name: /tenantOps-v2/mcn-lab/idm-type
     type: String
-    value: "SSO"
+    insecureValue: "SSO"
     tags:
       Name: tops-ssm-mcn-lab-idm-type-v2
       Environment: production
@@ -166,13 +173,14 @@ apiVersion: ssm.aws.upbound.io/v1beta1
 kind: Parameter
 metadata:
   name: tops-ssm-mcn-lab-token-name-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/mcn-lab/token-name
   labels:
     app.kubernetes.io/name: tops-core-v2
     app.kubernetes.io/component: ssm-parameters
 spec:
   forProvider:
     region: us-east-1
-    name: /tenantOps-v2/mcn-lab/token-name
     type: String
     valueSecretRef:
       key: value
@@ -190,15 +198,16 @@ apiVersion: ssm.aws.upbound.io/v1beta1
 kind: Parameter
 metadata:
   name: tops-ssm-mcn-lab-token-type-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/mcn-lab/token-type
   labels:
     app.kubernetes.io/name: tops-core-v2
     app.kubernetes.io/component: ssm-parameters
 spec:
   forProvider:
     region: us-east-1
-    name: /tenantOps-v2/mcn-lab/token-type
     type: String
-    value: "svccred"
+    insecureValue: "svccred"
     tags:
       Name: tops-ssm-mcn-lab-token-type-v2
       Environment: production
@@ -211,13 +220,14 @@ apiVersion: ssm.aws.upbound.io/v1beta1
 kind: Parameter
 metadata:
   name: tops-ssm-mcn-lab-token-value-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/mcn-lab/token-value
   labels:
     app.kubernetes.io/name: tops-core-v2
     app.kubernetes.io/component: ssm-parameters
 spec:
   forProvider:
     region: us-east-1
-    name: /tenantOps-v2/mcn-lab/token-value
     type: SecureString
     valueSecretRef:
       key: value
@@ -239,15 +249,16 @@ apiVersion: ssm.aws.upbound.io/v1beta1
 kind: Parameter
 metadata:
   name: tops-ssm-sec-lab-tenant-url-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/sec-lab/tenant-url
   labels:
     app.kubernetes.io/name: tops-core-v2
     app.kubernetes.io/component: ssm-parameters
 spec:
   forProvider:
     region: us-east-1
-    name: /tenantOps-v2/sec-lab/tenant-url
     type: String
-    value: "https://f5-xc-lab-sec.console.ves.volterra.io"
+    insecureValue: "https://f5-xc-lab-sec.console.ves.volterra.io"
     tags:
       Name: tops-ssm-sec-lab-tenant-url-v2
       Environment: production
@@ -260,15 +271,16 @@ apiVersion: ssm.aws.upbound.io/v1beta1
 kind: Parameter
 metadata:
   name: tops-ssm-sec-lab-idm-type-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/sec-lab/idm-type
   labels:
     app.kubernetes.io/name: tops-core-v2
     app.kubernetes.io/component: ssm-parameters
 spec:
   forProvider:
     region: us-east-1
-    name: /tenantOps-v2/sec-lab/idm-type
     type: String
-    value: "SSO"
+    insecureValue: "SSO"
     tags:
       Name: tops-ssm-sec-lab-idm-type-v2
       Environment: production
@@ -281,13 +293,14 @@ apiVersion: ssm.aws.upbound.io/v1beta1
 kind: Parameter
 metadata:
   name: tops-ssm-sec-lab-token-name-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/sec-lab/token-name
   labels:
     app.kubernetes.io/name: tops-core-v2
     app.kubernetes.io/component: ssm-parameters
 spec:
   forProvider:
     region: us-east-1
-    name: /tenantOps-v2/sec-lab/token-name
     type: String
     valueSecretRef:
       key: value
@@ -305,15 +318,16 @@ apiVersion: ssm.aws.upbound.io/v1beta1
 kind: Parameter
 metadata:
   name: tops-ssm-sec-lab-token-type-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/sec-lab/token-type
   labels:
     app.kubernetes.io/name: tops-core-v2
     app.kubernetes.io/component: ssm-parameters
 spec:
   forProvider:
     region: us-east-1
-    name: /tenantOps-v2/sec-lab/token-type
     type: String
-    value: "svccred"
+    insecureValue: "svccred"
     tags:
       Name: tops-ssm-sec-lab-token-type-v2
       Environment: production
@@ -326,13 +340,14 @@ apiVersion: ssm.aws.upbound.io/v1beta1
 kind: Parameter
 metadata:
   name: tops-ssm-sec-lab-token-value-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/sec-lab/token-value
   labels:
     app.kubernetes.io/name: tops-core-v2
     app.kubernetes.io/component: ssm-parameters
 spec:
   forProvider:
     region: us-east-1
-    name: /tenantOps-v2/sec-lab/token-value
     type: SecureString
     valueSecretRef:
       key: value

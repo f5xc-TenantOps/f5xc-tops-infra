@@ -10,7 +10,6 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
-    functionName: tops-cert-mgmt-mcn-v2
     runtime: python3.11
     handler: function.lambda_handler
     timeout: 60
@@ -42,7 +41,6 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
-    functionName: tops-cert-mgmt-app-v2
     runtime: python3.11
     handler: function.lambda_handler
     timeout: 60
@@ -74,7 +72,6 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
-    functionName: tops-cert-mgmt-sec-v2
     runtime: python3.11
     handler: function.lambda_handler
     timeout: 60

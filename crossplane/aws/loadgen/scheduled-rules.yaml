@@ -4,13 +4,14 @@ apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
 kind: Rule
 metadata:
   name: tops-loadgen-v2-hourly-rule
+  annotations:
+    crossplane.io/external-name: tops-loadgen-v2-hourly
   labels:
     app.kubernetes.io/name: tops-loadgen-v2
     app.kubernetes.io/component: eventbridge-rule
 spec:
   forProvider:
     region: us-east-1
-    name: tops-loadgen-v2-hourly
     description: Triggers loadgen task every hour
     scheduleExpression: "rate(1 hour)"
     state: ENABLED
@@ -60,13 +61,14 @@ apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
 kind: Rule
 metadata:
   name: tops-loadgen-v2-peak-rule
+  annotations:
+    crossplane.io/external-name: tops-loadgen-v2-peak-hours
   labels:
     app.kubernetes.io/name: tops-loadgen-v2
     app.kubernetes.io/component: eventbridge-rule
 spec:
   forProvider:
     region: us-east-1
-    name: tops-loadgen-v2-peak-hours
     description: Triggers loadgen task every 15 minutes during peak hours (9am-5pm UTC Mon-Fri)
     scheduleExpression: "cron(0/15 9-17 ? * MON-FRI *)"
     state: DISABLED

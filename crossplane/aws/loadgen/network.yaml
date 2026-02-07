@@ -1,6 +1,5 @@
 ---
 # Security group for Fargate loadgen tasks
-# Note: VPC ID needs to be configured - replace vpc-XXXXXXXXX with actual VPC ID
 apiVersion: ec2.aws.upbound.io/v1beta1
 kind: SecurityGroup
 metadata:
@@ -13,8 +12,8 @@ spec:
     region: us-east-1
     name: tops-loadgen-v2-sg
     description: Security group for loadgen Fargate tasks
-    # TODO: Configure VPC ID - uncomment and set the actual VPC ID
-    # vpcId: vpc-XXXXXXXXX
+    vpcIdRef:
+      name: tops-loadgen-v2-vpc
     tags:
       Name: tops-loadgen-v2-sg
       Environment: production

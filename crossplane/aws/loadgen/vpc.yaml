@@ -1,0 +1,159 @@
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: VPC
+metadata:
+  name: tops-loadgen-v2-vpc
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: vpc
+spec:
+  forProvider:
+    region: us-east-1
+    cidrBlock: 10.100.0.0/24
+    enableDnsSupport: true
+    enableDnsHostnames: true
+    tags:
+      Name: tops-loadgen-v2-vpc
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: InternetGateway
+metadata:
+  name: tops-loadgen-v2-igw
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: vpc
+spec:
+  forProvider:
+    region: us-east-1
+    vpcIdRef:
+      name: tops-loadgen-v2-vpc
+    tags:
+      Name: tops-loadgen-v2-igw
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Subnet
+metadata:
+  name: tops-loadgen-v2-subnet-a
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: vpc
+spec:
+  forProvider:
+    region: us-east-1
+    availabilityZone: us-east-1a
+    vpcIdRef:
+      name: tops-loadgen-v2-vpc
+    cidrBlock: 10.100.0.0/25
+    mapPublicIpOnLaunch: true
+    tags:
+      Name: tops-loadgen-v2-subnet-a
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Subnet
+metadata:
+  name: tops-loadgen-v2-subnet-b
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: vpc
+spec:
+  forProvider:
+    region: us-east-1
+    availabilityZone: us-east-1b
+    vpcIdRef:
+      name: tops-loadgen-v2-vpc
+    cidrBlock: 10.100.0.128/25
+    mapPublicIpOnLaunch: true
+    tags:
+      Name: tops-loadgen-v2-subnet-b
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: RouteTable
+metadata:
+  name: tops-loadgen-v2-rt
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: vpc
+spec:
+  forProvider:
+    region: us-east-1
+    vpcIdRef:
+      name: tops-loadgen-v2-vpc
+    tags:
+      Name: tops-loadgen-v2-rt
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-loadgen
+  providerConfigRef:
+    name: default
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: Route
+metadata:
+  name: tops-loadgen-v2-default-route
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: vpc
+spec:
+  forProvider:
+    region: us-east-1
+    routeTableIdRef:
+      name: tops-loadgen-v2-rt
+    destinationCidrBlock: 0.0.0.0/0
+    gatewayIdRef:
+      name: tops-loadgen-v2-igw
+  providerConfigRef:
+    name: default
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: RouteTableAssociation
+metadata:
+  name: tops-loadgen-v2-rta-a
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: vpc
+spec:
+  forProvider:
+    region: us-east-1
+    routeTableIdRef:
+      name: tops-loadgen-v2-rt
+    subnetIdRef:
+      name: tops-loadgen-v2-subnet-a
+  providerConfigRef:
+    name: default
+---
+apiVersion: ec2.aws.upbound.io/v1beta1
+kind: RouteTableAssociation
+metadata:
+  name: tops-loadgen-v2-rta-b
+  labels:
+    app.kubernetes.io/name: tops-loadgen-v2
+    app.kubernetes.io/component: vpc
+spec:
+  forProvider:
+    region: us-east-1
+    routeTableIdRef:
+      name: tops-loadgen-v2-rt
+    subnetIdRef:
+      name: tops-loadgen-v2-subnet-b
+  providerConfigRef:
+    name: default

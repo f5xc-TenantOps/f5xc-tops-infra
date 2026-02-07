@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portal-frontend
+  namespace: tops-portal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portal-frontend
+  template:
+    metadata:
+      labels:
+        app: portal-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: ghcr.io/f5xc-tenantops/tops-portal-frontend:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"

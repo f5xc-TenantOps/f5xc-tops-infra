@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portal-backend
+  namespace: tops-portal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portal-backend
+  template:
+    metadata:
+      labels:
+        app: portal-backend
+    spec:
+      containers:
+        - name: backend
+          image: ghcr.io/f5xc-tenantops/tops-portal-backend:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: TOPS_AWS_REGION
+              value: "us-east-1"
+            - name: TOPS_JOB_STATE_TABLE
+              valueFrom:
+                secretKeyRef:
+                  name: portal-config
+                  key: job-state-table
+            - name: TOPS_LAB_CONFIG_TABLE
+              valueFrom:
+                secretKeyRef:
+                  name: portal-config
+                  key: lab-config-table
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: access-key-id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: secret-access-key
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"

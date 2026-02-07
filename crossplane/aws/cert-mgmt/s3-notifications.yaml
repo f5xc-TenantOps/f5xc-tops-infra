@@ -1,0 +1,91 @@
+---
+# S3 Bucket Notification - triggers cert-mgmt Lambdas when certs are uploaded
+# Note: Replace ACCOUNT_ID with actual AWS account ID
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketNotification
+metadata:
+  name: tops-cert-bucket-v2-notifications
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: cert-mgmt-s3-notifications
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: tops-cert-bucket-v2
+    lambdaFunction:
+      - events:
+          - "s3:ObjectCreated:*"
+        filterPrefix: "lab-mcn-wildcard/"
+        lambdaFunctionArn: arn:aws:lambda:us-east-1:ACCOUNT_ID:function:tops-cert-mgmt-mcn-v2
+      - events:
+          - "s3:ObjectCreated:*"
+        filterPrefix: "lab-app-wildcard/"
+        lambdaFunctionArn: arn:aws:lambda:us-east-1:ACCOUNT_ID:function:tops-cert-mgmt-app-v2
+      - events:
+          - "s3:ObjectCreated:*"
+        filterPrefix: "lab-sec-wildcard/"
+        lambdaFunctionArn: arn:aws:lambda:us-east-1:ACCOUNT_ID:function:tops-cert-mgmt-sec-v2
+  providerConfigRef:
+    name: default
+---
+# Lambda permissions for S3 to invoke cert-mgmt functions
+apiVersion: lambda.aws.upbound.io/v1beta1
+kind: Permission
+metadata:
+  name: tops-cert-mgmt-mcn-s3-permission-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: cert-mgmt-s3-notifications
+spec:
+  forProvider:
+    region: us-east-1
+    action: lambda:InvokeFunction
+    functionNameRef:
+      name: tops-cert-mgmt-mcn-v2
+    principal: s3.amazonaws.com
+    sourceArnRef:
+      name: tops-cert-bucket-v2
+    statementId: MCN-AllowExecutionFromS3-v2
+  providerConfigRef:
+    name: default
+---
+apiVersion: lambda.aws.upbound.io/v1beta1
+kind: Permission
+metadata:
+  name: tops-cert-mgmt-app-s3-permission-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: cert-mgmt-s3-notifications
+spec:
+  forProvider:
+    region: us-east-1
+    action: lambda:InvokeFunction
+    functionNameRef:
+      name: tops-cert-mgmt-app-v2
+    principal: s3.amazonaws.com
+    sourceArnRef:
+      name: tops-cert-bucket-v2
+    statementId: App-AllowExecutionFromS3-v2
+  providerConfigRef:
+    name: default
+---
+apiVersion: lambda.aws.upbound.io/v1beta1
+kind: Permission
+metadata:
+  name: tops-cert-mgmt-sec-s3-permission-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: cert-mgmt-s3-notifications
+spec:
+  forProvider:
+    region: us-east-1
+    action: lambda:InvokeFunction
+    functionNameRef:
+      name: tops-cert-mgmt-sec-v2
+    principal: s3.amazonaws.com
+    sourceArnRef:
+      name: tops-cert-bucket-v2
+    statementId: SEC-AllowExecutionFromS3-v2
+  providerConfigRef:
+    name: default

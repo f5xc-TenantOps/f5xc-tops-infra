@@ -1,0 +1,62 @@
+---
+# EventBridge schedule for UDF lab cleaner
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Rule
+metadata:
+  name: tops-udf-cleaner-schedule-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: udf-cleaner-eventbridge
+spec:
+  forProvider:
+    region: us-east-1
+    name: tops-udf-cleaner-schedule-v2
+    description: Scheduled trigger for UDF Cleaner Lambda (every minute)
+    scheduleExpression: "rate(1 minute)"
+    state: ENABLED
+    tags:
+      Name: tops-udf-cleaner-schedule-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Target
+metadata:
+  name: tops-udf-cleaner-target-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: udf-cleaner-eventbridge
+spec:
+  forProvider:
+    region: us-east-1
+    ruleRef:
+      name: tops-udf-cleaner-schedule-v2
+    targetId: tops-udf-cleaner-v2
+    # Replace ACCOUNT_ID with the actual AWS account ID
+    arn: arn:aws:lambda:us-east-1:ACCOUNT_ID:function:tops-udf-cleaner-v2
+  providerConfigRef:
+    name: default
+---
+# Lambda permission for EventBridge to invoke the cleaner
+apiVersion: lambda.aws.upbound.io/v1beta1
+kind: Permission
+metadata:
+  name: tops-udf-cleaner-eventbridge-permission-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: udf-cleaner-eventbridge
+spec:
+  forProvider:
+    region: us-east-1
+    action: lambda:InvokeFunction
+    functionNameRef:
+      name: tops-udf-cleaner-v2
+    principal: events.amazonaws.com
+    sourceArnRef:
+      name: tops-udf-cleaner-schedule-v2
+    statementId: AllowExecutionFromCloudWatch-v2
+  providerConfigRef:
+    name: default

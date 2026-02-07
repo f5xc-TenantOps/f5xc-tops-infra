@@ -1,0 +1,23 @@
+---
+apiVersion: dynamodb.aws.upbound.io/v1beta2
+kind: Table
+metadata:
+  name: tops-udf-lab-config-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: dynamodb-lab-config
+spec:
+  forProvider:
+    region: us-east-1
+    billingMode: PAY_PER_REQUEST
+    hashKey: lab_id
+    attribute:
+      - name: lab_id
+        type: S
+    tags:
+      Name: tops-udf-lab-config-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default

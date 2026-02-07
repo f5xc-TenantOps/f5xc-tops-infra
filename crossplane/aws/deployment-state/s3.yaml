@@ -1,5 +1,5 @@
 ---
-# Bucket 1: tops-deployment-state-v2
+# Deployment state S3 bucket
 # For deployment state files polled by UDF lab service
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: Bucket
@@ -106,25 +106,5 @@ spec:
           }
         ]
       }
-  providerConfigRef:
-    name: default
----
-# Bucket 2: tops-lambda-bucket-v2
-# For Lambda function code storage
-apiVersion: s3.aws.upbound.io/v1beta1
-kind: Bucket
-metadata:
-  name: tops-lambda-bucket-v2
-  labels:
-    app.kubernetes.io/name: tops-core-v2
-    app.kubernetes.io/component: s3-lambda
-spec:
-  forProvider:
-    region: us-east-1
-    tags:
-      Name: tops-lambda-bucket-v2
-      Environment: production
-      ManagedBy: crossplane
-      Application: tops-core
   providerConfigRef:
     name: default

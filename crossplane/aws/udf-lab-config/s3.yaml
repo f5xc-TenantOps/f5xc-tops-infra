@@ -1,0 +1,88 @@
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: Bucket
+metadata:
+  name: tops-registry-bucket-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: s3-lab-registry
+spec:
+  forProvider:
+    region: us-east-1
+    tags:
+      Name: tops-registry-bucket-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketPublicAccessBlock
+metadata:
+  name: tops-registry-bucket-v2-public-access
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: s3-lab-registry
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: tops-registry-bucket-v2
+    blockPublicAcls: true
+    blockPublicPolicy: true
+    ignorePublicAcls: true
+    restrictPublicBuckets: true
+  providerConfigRef:
+    name: default
+---
+# Note: Update the PrincipalOrgPaths value to match your organization path
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketPolicy
+metadata:
+  name: tops-registry-bucket-v2-policy
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: s3-lab-registry
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: tops-registry-bucket-v2
+    policy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Sid": "AllowCrossAccountRead",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Condition": {
+              "ForAnyValue:StringLike": {
+                "aws:PrincipalOrgPaths": "UDF_PRINCIPAL_ORG_PATH_PLACEHOLDER"
+              }
+            },
+            "Action": [
+              "s3:ListBucket",
+              "s3:GetBucketLocation"
+            ],
+            "Resource": "arn:aws:s3:::tops-registry-bucket-v2"
+          },
+          {
+            "Sid": "ReadFiles",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Condition": {
+              "ForAnyValue:StringLike": {
+                "aws:PrincipalOrgPaths": "UDF_PRINCIPAL_ORG_PATH_PLACEHOLDER"
+              }
+            },
+            "Action": [
+              "s3:GetObject"
+            ],
+            "Resource": "arn:aws:s3:::tops-registry-bucket-v2/*"
+          }
+        ]
+      }
+  providerConfigRef:
+    name: default

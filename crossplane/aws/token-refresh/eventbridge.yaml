@@ -1,0 +1,175 @@
+# Note: Replace ACCOUNT_ID in target ARNs with actual AWS account ID
+---
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Rule
+metadata:
+  name: tops-token-refresh-mcn-schedule-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: token-refresh-eventbridge
+spec:
+  forProvider:
+    name: tops-token-refresh-mcn-schedule-v2
+    region: us-east-1
+    scheduleExpression: "rate(12 hours)"
+    state: ENABLED
+    tags:
+      Name: tops-token-refresh-mcn-schedule-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Rule
+metadata:
+  name: tops-token-refresh-app-schedule-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: token-refresh-eventbridge
+spec:
+  forProvider:
+    name: tops-token-refresh-app-schedule-v2
+    region: us-east-1
+    scheduleExpression: "rate(12 hours)"
+    state: ENABLED
+    tags:
+      Name: tops-token-refresh-app-schedule-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Rule
+metadata:
+  name: tops-token-refresh-sec-schedule-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: token-refresh-eventbridge
+spec:
+  forProvider:
+    name: tops-token-refresh-sec-schedule-v2
+    region: us-east-1
+    scheduleExpression: "rate(12 hours)"
+    state: ENABLED
+    tags:
+      Name: tops-token-refresh-sec-schedule-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Target
+metadata:
+  name: tops-token-refresh-mcn-target-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: token-refresh-eventbridge
+spec:
+  forProvider:
+    region: us-east-1
+    ruleRef:
+      name: tops-token-refresh-mcn-schedule-v2
+    targetId: lambda-target-mcn-v2
+    arn: arn:aws:lambda:us-east-1:ACCOUNT_ID:function:tops-token-refresh-mcn-v2
+  providerConfigRef:
+    name: default
+---
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Target
+metadata:
+  name: tops-token-refresh-app-target-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: token-refresh-eventbridge
+spec:
+  forProvider:
+    region: us-east-1
+    ruleRef:
+      name: tops-token-refresh-app-schedule-v2
+    targetId: lambda-target-app-v2
+    arn: arn:aws:lambda:us-east-1:ACCOUNT_ID:function:tops-token-refresh-app-v2
+  providerConfigRef:
+    name: default
+---
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Target
+metadata:
+  name: tops-token-refresh-sec-target-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: token-refresh-eventbridge
+spec:
+  forProvider:
+    region: us-east-1
+    ruleRef:
+      name: tops-token-refresh-sec-schedule-v2
+    targetId: lambda-target-sec-v2
+    arn: arn:aws:lambda:us-east-1:ACCOUNT_ID:function:tops-token-refresh-sec-v2
+  providerConfigRef:
+    name: default
+---
+apiVersion: lambda.aws.upbound.io/v1beta1
+kind: Permission
+metadata:
+  name: tops-token-refresh-mcn-permission-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: token-refresh-eventbridge
+spec:
+  forProvider:
+    region: us-east-1
+    action: lambda:InvokeFunction
+    functionNameRef:
+      name: tops-token-refresh-mcn-v2
+    principal: events.amazonaws.com
+    sourceArnRef:
+      name: tops-token-refresh-mcn-schedule-v2
+    statementId: AllowExecutionFromCloudWatch-mcn-v2
+  providerConfigRef:
+    name: default
+---
+apiVersion: lambda.aws.upbound.io/v1beta1
+kind: Permission
+metadata:
+  name: tops-token-refresh-app-permission-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: token-refresh-eventbridge
+spec:
+  forProvider:
+    region: us-east-1
+    action: lambda:InvokeFunction
+    functionNameRef:
+      name: tops-token-refresh-app-v2
+    principal: events.amazonaws.com
+    sourceArnRef:
+      name: tops-token-refresh-app-schedule-v2
+    statementId: AllowExecutionFromCloudWatch-app-v2
+  providerConfigRef:
+    name: default
+---
+apiVersion: lambda.aws.upbound.io/v1beta1
+kind: Permission
+metadata:
+  name: tops-token-refresh-sec-permission-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: token-refresh-eventbridge
+spec:
+  forProvider:
+    region: us-east-1
+    action: lambda:InvokeFunction
+    functionNameRef:
+      name: tops-token-refresh-sec-v2
+    principal: events.amazonaws.com
+    sourceArnRef:
+      name: tops-token-refresh-sec-schedule-v2
+    statementId: AllowExecutionFromCloudWatch-sec-v2
+  providerConfigRef:
+    name: default

@@ -1,0 +1,19 @@
+---
+# SQS trigger for UDF Dispatch Lambda
+apiVersion: lambda.aws.upbound.io/v1beta1
+kind: EventSourceMapping
+metadata:
+  name: tops-udf-dispatch-v2-sqs-trigger
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: lambda-event-source
+spec:
+  forProvider:
+    region: us-east-1
+    batchSize: 1
+    enabled: true
+    functionNameRef:
+      name: tops-udf-dispatch-v2
+    eventSourceArn: arn:aws:sqs:us-east-1:430171053948:tops-udf-queue-v2
+  providerConfigRef:
+    name: default

@@ -1,0 +1,205 @@
+---
+# Provisioning Workflow Step Function State Machine
+# Note: Replace ACCOUNT_ID with actual AWS account ID
+apiVersion: sfn.aws.upbound.io/v1beta2
+kind: StateMachine
+metadata:
+  name: tops-provisioning-workflow-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: provisioning-step-function
+spec:
+  forProvider:
+    region: us-east-1
+    name: tops-provisioning-workflow-v2
+    roleArnRef:
+      name: tops-provisioning-sfn-role-v2
+    loggingConfiguration:
+      includeExecutionData: true
+      level: ERROR
+      logDestination: arn:aws:logs:us-east-1:ACCOUNT_ID:log-group:/aws/states/tops-provisioning-workflow-v2:*
+    definition: |
+      {
+        "Comment": "TenantOps General Provisioning Workflow (v2)",
+        "StartAt": "FetchJobConfig",
+        "States": {
+          "FetchJobConfig": {
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:us-east-1:ACCOUNT_ID:function:tops-fetch-job-config-v2",
+            "ResultPath": "$",
+            "Next": "InitializeJobState",
+            "Catch": [
+              {
+                "ErrorEquals": ["States.ALL"],
+                "ResultPath": "$.error",
+                "Next": "MarkFailed"
+              }
+            ]
+          },
+          "InitializeJobState": {
+            "Type": "Pass",
+            "Parameters": {
+              "job_config.$": "$.job_config",
+              "variables.$": "$.variables",
+              "email.$": "$.email",
+              "petname.$": "$.petname",
+              "ssm_base_path.$": "$.ssm_base_path",
+              "job_execution_id.$": "$$.Execution.Name",
+              "status": "IN_PROGRESS",
+              "job_state.$": "$.job_state",
+              "lab_id.$": "$.lab_id",
+              "dep_id.$": "$.dep_id"
+            },
+            "Next": "CheckNamespace"
+          },
+          "CheckNamespace": {
+            "Type": "Choice",
+            "Choices": [
+              {
+                "Variable": "$.job_config.namespace.enabled",
+                "BooleanEquals": true,
+                "Next": "CreateNamespace"
+              }
+            ],
+            "Default": "CheckUser"
+          },
+          "CreateNamespace": {
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:us-east-1:ACCOUNT_ID:function:tops-ns-create-v2",
+            "Parameters": {
+              "ssm_base_path.$": "$.ssm_base_path",
+              "namespace_name.$": "$.petname",
+              "description.$": "States.Format('Namespace for job {}', $.job_execution_id)",
+              "job_state.$": "$.job_state",
+              "lab_id.$": "$.lab_id"
+            },
+            "ResultPath": "$.namespace_result",
+            "Next": "CheckUser",
+            "Catch": [
+              {
+                "ErrorEquals": ["States.ALL"],
+                "ResultPath": "$.namespace_error",
+                "Next": "CheckUser"
+              }
+            ]
+          },
+          "CheckUser": {
+            "Type": "Choice",
+            "Choices": [
+              {
+                "Variable": "$.job_config.user.enabled",
+                "BooleanEquals": true,
+                "Next": "CreateUser"
+              }
+            ],
+            "Default": "CheckResources"
+          },
+          "CreateUser": {
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:us-east-1:ACCOUNT_ID:function:tops-user-create-v2",
+            "Parameters": {
+              "ssm_base_path.$": "$.ssm_base_path",
+              "first_name": "Lab User",
+              "last_name.$": "$.petname",
+              "email.$": "$.email",
+              "group_names.$": "$.job_config.user.group_names",
+              "namespace_roles.$": "$.job_config.user.namespace_roles",
+              "job_state.$": "$.job_state",
+              "lab_id.$": "$.lab_id"
+            },
+            "ResultPath": "$.user_result",
+            "Next": "CheckResources",
+            "Catch": [
+              {
+                "ErrorEquals": ["States.ALL"],
+                "ResultPath": "$.user_error",
+                "Next": "CheckResources"
+              }
+            ]
+          },
+          "CheckResources": {
+            "Type": "Choice",
+            "Choices": [
+              {
+                "Variable": "$.job_config.resources[0]",
+                "IsPresent": true,
+                "Next": "ProcessResources"
+              }
+            ],
+            "Default": "MarkComplete"
+          },
+          "ProcessResources": {
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:us-east-1:ACCOUNT_ID:function:tops-resource-orchestrator-v2",
+            "Parameters": {
+              "job_config.$": "$.job_config",
+              "ssm_base_path.$": "$.ssm_base_path",
+              "petname.$": "$.petname",
+              "job_state.$": "$.job_state",
+              "lab_id.$": "$.lab_id"
+            },
+            "ResultPath": "$.resources_result",
+            "Next": "CheckResourcesResult",
+            "Catch": [
+              {
+                "ErrorEquals": ["States.ALL"],
+                "ResultPath": "$.resources_error",
+                "Next": "MarkFailed"
+              }
+            ]
+          },
+          "CheckResourcesResult": {
+            "Type": "Choice",
+            "Choices": [
+              {
+                "Variable": "$.resources_result.status",
+                "StringEquals": "failed",
+                "Next": "MarkFailed"
+              },
+              {
+                "Variable": "$.resources_result.status",
+                "StringEquals": "partial",
+                "Next": "MarkPartial"
+              }
+            ],
+            "Default": "MarkComplete"
+          },
+          "MarkComplete": {
+            "Type": "Pass",
+            "Parameters": {
+              "status": "COMPLETED",
+              "job_execution_id.$": "$.job_execution_id",
+              "email.$": "$.email",
+              "petname.$": "$.petname"
+            },
+            "End": true
+          },
+          "MarkPartial": {
+            "Type": "Pass",
+            "Parameters": {
+              "status": "PARTIAL",
+              "job_execution_id.$": "$.job_execution_id",
+              "email.$": "$.email",
+              "petname.$": "$.petname",
+              "resources_result.$": "$.resources_result"
+            },
+            "End": true
+          },
+          "MarkFailed": {
+            "Type": "Pass",
+            "Parameters": {
+              "status": "FAILED",
+              "job_execution_id.$": "$.job_execution_id",
+              "error.$": "$.error"
+            },
+            "End": true
+          }
+        }
+      }
+    tags:
+      Name: tops-provisioning-workflow-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default

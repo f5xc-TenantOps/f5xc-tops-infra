@@ -18,8 +18,8 @@ spec:
     roleRef:
       name: tops-udf-cleaner-role-v2
     environment:
-      variables:
-        DEPLOYMENT_STATE_TABLE: tops-udf-lab-deployment-state-v2
+      - variables:
+          DEPLOYMENT_STATE_TABLE: tops-udf-lab-deployment-state-v2
     tags:
       Name: tops-udf-cleaner-v2
       Environment: production

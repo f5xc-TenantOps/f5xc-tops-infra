@@ -20,8 +20,8 @@ spec:
     roleRef:
       name: tops-udf-helpers-role-v2
     environment:
-      variables:
-        ENV: production
+      - variables:
+          ENV: production
     tags:
       Name: tops-udf-helper-example-pre-v2
       Environment: production
@@ -49,8 +49,8 @@ spec:
     roleRef:
       name: tops-udf-helpers-role-v2
     environment:
-      variables:
-        ENV: production
+      - variables:
+          ENV: production
     tags:
       Name: tops-udf-helper-apilab-pre-v2
       Environment: production
@@ -78,8 +78,8 @@ spec:
     roleRef:
       name: tops-udf-helpers-role-v2
     environment:
-      variables:
-        ENV: production
+      - variables:
+          ENV: production
     tags:
       Name: tops-udf-helper-botlab-pre-v2
       Environment: production
@@ -107,8 +107,8 @@ spec:
     roleRef:
       name: tops-udf-helpers-role-v2
     environment:
-      variables:
-        ENV: production
+      - variables:
+          ENV: production
     tags:
       Name: tops-udf-helper-caaslab-pre-v2
       Environment: production
@@ -136,8 +136,8 @@ spec:
     roleRef:
       name: tops-udf-helpers-role-v2
     environment:
-      variables:
-        ENV: production
+      - variables:
+          ENV: production
     tags:
       Name: tops-udf-helper-waaplab-pre-v2
       Environment: production

@@ -1,6 +1,5 @@
 ---
 # S3 Bucket Notification - triggers cert-mgmt Lambdas when certs are uploaded
-# Note: Replace ACCOUNT_ID with actual AWS account ID
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: BucketNotification
 metadata:
@@ -17,15 +16,15 @@ spec:
       - events:
           - "s3:ObjectCreated:*"
         filterPrefix: "lab-mcn-wildcard/"
-        lambdaFunctionArn: arn:aws:lambda:us-east-1:ACCOUNT_ID:function:tops-cert-mgmt-mcn-v2
+        lambdaFunctionArn: arn:aws:lambda:us-east-1:430171053948:function:tops-cert-mgmt-mcn-v2
       - events:
           - "s3:ObjectCreated:*"
         filterPrefix: "lab-app-wildcard/"
-        lambdaFunctionArn: arn:aws:lambda:us-east-1:ACCOUNT_ID:function:tops-cert-mgmt-app-v2
+        lambdaFunctionArn: arn:aws:lambda:us-east-1:430171053948:function:tops-cert-mgmt-app-v2
       - events:
           - "s3:ObjectCreated:*"
         filterPrefix: "lab-sec-wildcard/"
-        lambdaFunctionArn: arn:aws:lambda:us-east-1:ACCOUNT_ID:function:tops-cert-mgmt-sec-v2
+        lambdaFunctionArn: arn:aws:lambda:us-east-1:430171053948:function:tops-cert-mgmt-sec-v2
   providerConfigRef:
     name: default
 ---

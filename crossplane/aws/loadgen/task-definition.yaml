@@ -23,7 +23,7 @@ spec:
       [
         {
           "name": "tor-sidecar",
-          "image": "ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/tops-tor:latest",
+          "image": "430171053948.dkr.ecr.us-east-1.amazonaws.com/tops-tor:latest",
           "essential": true,
           "cpu": 128,
           "memory": 256,
@@ -57,7 +57,7 @@ spec:
         },
         {
           "name": "k6",
-          "image": "ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/tops-k6:latest",
+          "image": "430171053948.dkr.ecr.us-east-1.amazonaws.com/tops-k6:latest",
           "essential": true,
           "cpu": 384,
           "memory": 768,

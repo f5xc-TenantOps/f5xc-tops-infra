@@ -37,7 +37,6 @@ spec:
   providerConfigRef:
     name: default
 ---
-# Note: Replace ACCOUNT_ID with actual AWS account ID
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: BucketPolicy
 metadata:
@@ -58,7 +57,7 @@ spec:
             "Sid": "AllowCertMgmtRead",
             "Effect": "Allow",
             "Principal": {
-              "AWS": "arn:aws:iam::ACCOUNT_ID:role/tops-cert-mgmt-role-v2"
+              "AWS": "arn:aws:iam::430171053948:role/tops-cert-mgmt-role-v2"
             },
             "Action": [
               "s3:GetObject",
@@ -73,7 +72,7 @@ spec:
             "Sid": "AllowAcmeClientReadWrite",
             "Effect": "Allow",
             "Principal": {
-              "AWS": "arn:aws:iam::ACCOUNT_ID:role/tops-acme-client-role-v2"
+              "AWS": "arn:aws:iam::430171053948:role/tops-acme-client-role-v2"
             },
             "Action": [
               "s3:GetObject",

@@ -35,8 +35,7 @@ spec:
     ruleRef:
       name: tops-udf-cleaner-schedule-v2
     targetId: tops-udf-cleaner-v2
-    # Replace ACCOUNT_ID with the actual AWS account ID
-    arn: arn:aws:lambda:us-east-1:ACCOUNT_ID:function:tops-udf-cleaner-v2
+    arn: arn:aws:lambda:us-east-1:430171053948:function:tops-udf-cleaner-v2
   providerConfigRef:
     name: default
 ---

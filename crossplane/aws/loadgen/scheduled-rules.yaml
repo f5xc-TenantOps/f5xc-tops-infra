@@ -36,7 +36,7 @@ spec:
     ruleRef:
       name: tops-loadgen-v2-hourly-rule
     targetId: tops-loadgen-v2-task
-    arn: arn:aws:ecs:us-east-1:ACCOUNT_ID:cluster/tops-loadgen-v2-cluster
+    arn: arn:aws:ecs:us-east-1:430171053948:cluster/tops-loadgen-v2-cluster
     roleArnRef:
       name: tops-loadgen-v2-events-role
     ecsTarget:
@@ -92,7 +92,7 @@ spec:
     ruleRef:
       name: tops-loadgen-v2-peak-rule
     targetId: tops-loadgen-v2-task-peak
-    arn: arn:aws:ecs:us-east-1:ACCOUNT_ID:cluster/tops-loadgen-v2-cluster
+    arn: arn:aws:ecs:us-east-1:430171053948:cluster/tops-loadgen-v2-cluster
     roleArnRef:
       name: tops-loadgen-v2-events-role
     ecsTarget:

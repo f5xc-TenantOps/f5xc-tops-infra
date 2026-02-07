@@ -12,6 +12,7 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
+    eventBusName: default
     description: Triggers loadgen task every hour
     scheduleExpression: "rate(1 hour)"
     state: ENABLED
@@ -34,6 +35,7 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
+    eventBusName: default
     ruleRef:
       name: tops-loadgen-v2-hourly-rule
     targetId: tops-loadgen-v2-task
@@ -69,6 +71,7 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
+    eventBusName: default
     description: Triggers loadgen task every 15 minutes during peak hours (9am-5pm UTC Mon-Fri)
     scheduleExpression: "cron(0/15 9-17 ? * MON-FRI *)"
     state: DISABLED
@@ -91,6 +94,7 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
+    eventBusName: default
     ruleRef:
       name: tops-loadgen-v2-peak-rule
     targetId: tops-loadgen-v2-task-peak

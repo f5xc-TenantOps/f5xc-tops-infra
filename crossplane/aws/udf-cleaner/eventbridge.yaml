@@ -10,6 +10,7 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
+    eventBusName: default
     description: Scheduled trigger for UDF Cleaner Lambda (every minute)
     scheduleExpression: "rate(1 minute)"
     state: ENABLED
@@ -31,6 +32,7 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
+    eventBusName: default
     ruleRef:
       name: tops-udf-cleaner-schedule-v2
     targetId: tops-udf-cleaner-v2

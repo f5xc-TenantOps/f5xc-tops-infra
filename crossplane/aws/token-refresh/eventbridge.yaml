@@ -9,6 +9,7 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
+    eventBusName: default
     scheduleExpression: "rate(12 hours)"
     state: ENABLED
     tags:
@@ -29,6 +30,7 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
+    eventBusName: default
     scheduleExpression: "rate(12 hours)"
     state: ENABLED
     tags:
@@ -49,6 +51,7 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
+    eventBusName: default
     scheduleExpression: "rate(12 hours)"
     state: ENABLED
     tags:
@@ -69,6 +72,7 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
+    eventBusName: default
     ruleRef:
       name: tops-token-refresh-mcn-schedule-v2
     targetId: lambda-target-mcn-v2
@@ -86,6 +90,7 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
+    eventBusName: default
     ruleRef:
       name: tops-token-refresh-app-schedule-v2
     targetId: lambda-target-app-v2
@@ -103,6 +108,7 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
+    eventBusName: default
     ruleRef:
       name: tops-token-refresh-sec-schedule-v2
     targetId: lambda-target-sec-v2

@@ -10,6 +10,7 @@ spec:
   forProvider:
     description: Triggers ACME Client Lambdas daily
     region: us-east-1
+    eventBusName: default
     scheduleExpression: "rate(1 day)"
     state: ENABLED
     tags:
@@ -30,6 +31,7 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
+    eventBusName: default
     ruleRef:
       name: tops-acme-daily-trigger-v2
     targetId: acme-lambda-mcn-v2
@@ -47,6 +49,7 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
+    eventBusName: default
     ruleRef:
       name: tops-acme-daily-trigger-v2
     targetId: acme-lambda-app-v2
@@ -64,6 +67,7 @@ metadata:
 spec:
   forProvider:
     region: us-east-1
+    eventBusName: default
     ruleRef:
       name: tops-acme-daily-trigger-v2
     targetId: acme-lambda-sec-v2

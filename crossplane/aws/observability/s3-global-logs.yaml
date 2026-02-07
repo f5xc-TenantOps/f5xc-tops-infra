@@ -1,0 +1,133 @@
+---
+# S3 bucket for F5 XC Global Log Receiver logs
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: Bucket
+metadata:
+  name: f5xc-tops-global-logs
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: s3-global-logs
+spec:
+  forProvider:
+    region: us-east-1
+    tags:
+      Name: f5xc-tops-global-logs
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-observability
+  providerConfigRef:
+    name: default
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketVersioning
+metadata:
+  name: f5xc-tops-global-logs-versioning
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: s3-global-logs
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: f5xc-tops-global-logs
+    versioningConfiguration:
+      - status: Disabled
+  providerConfigRef:
+    name: default
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketLifecycleConfiguration
+metadata:
+  name: f5xc-tops-global-logs-lifecycle
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: s3-global-logs
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: f5xc-tops-global-logs
+    rule:
+      - id: expire-old-logs
+        status: Enabled
+        expiration:
+          - days: 30
+        noncurrentVersionExpiration:
+          - noncurrentDays: 1
+  providerConfigRef:
+    name: default
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketServerSideEncryptionConfiguration
+metadata:
+  name: f5xc-tops-global-logs-encryption
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: s3-global-logs
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: f5xc-tops-global-logs
+    rule:
+      - applyServerSideEncryptionByDefault:
+          - sseAlgorithm: AES256
+  providerConfigRef:
+    name: default
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketPublicAccessBlock
+metadata:
+  name: f5xc-tops-global-logs-public-access
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: s3-global-logs
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: f5xc-tops-global-logs
+    blockPublicAcls: true
+    blockPublicPolicy: true
+    ignorePublicAcls: true
+    restrictPublicBuckets: true
+  providerConfigRef:
+    name: default
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketPolicy
+metadata:
+  name: f5xc-tops-global-logs-policy
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: s3-global-logs
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: f5xc-tops-global-logs
+    policy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Sid": "AllowF5XCLogDelivery",
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "logs.amazonaws.com"
+            },
+            "Action": [
+              "s3:PutObject",
+              "s3:PutObjectAcl"
+            ],
+            "Resource": "arn:aws:s3:::f5xc-tops-global-logs/*",
+            "Condition": {
+              "StringEquals": {
+                "s3:x-amz-acl": "bucket-owner-full-control"
+              }
+            }
+          }
+        ]
+      }
+  providerConfigRef:
+    name: default

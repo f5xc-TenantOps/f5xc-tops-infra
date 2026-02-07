@@ -1,0 +1,96 @@
+---
+# IAM user for Vector to read logs from S3
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: User
+metadata:
+  name: vector-log-reader
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: iam-vector
+spec:
+  forProvider:
+    path: /service-accounts/
+    tags:
+      Name: vector-log-reader
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-observability
+  providerConfigRef:
+    name: default
+---
+# Access key for Vector (publishes credentials to K8s secret)
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: AccessKey
+metadata:
+  name: vector-log-reader-access-key
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: iam-vector
+spec:
+  forProvider:
+    userRef:
+      name: vector-log-reader
+  writeConnectionSecretToRef:
+    name: vector-aws-credentials
+    namespace: observability
+  providerConfigRef:
+    name: default
+---
+# Policy granting S3 read access to the global-logs bucket
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: Policy
+metadata:
+  name: vector-s3-log-read
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: iam-vector
+spec:
+  forProvider:
+    policy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Sid": "ListBucket",
+            "Effect": "Allow",
+            "Action": [
+              "s3:ListBucket",
+              "s3:GetBucketLocation"
+            ],
+            "Resource": "arn:aws:s3:::f5xc-tops-global-logs"
+          },
+          {
+            "Sid": "ReadObjects",
+            "Effect": "Allow",
+            "Action": [
+              "s3:GetObject",
+              "s3:GetObjectVersion"
+            ],
+            "Resource": "arn:aws:s3:::f5xc-tops-global-logs/*"
+          }
+        ]
+      }
+    tags:
+      Name: vector-s3-log-read
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-observability
+  providerConfigRef:
+    name: default
+---
+# Attach the S3 read policy to the Vector user
+apiVersion: iam.aws.upbound.io/v1beta1
+kind: UserPolicyAttachment
+metadata:
+  name: vector-s3-log-read-attachment
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: iam-vector
+spec:
+  forProvider:
+    policyArnRef:
+      name: vector-s3-log-read
+    userRef:
+      name: vector-log-reader
+  providerConfigRef:
+    name: default

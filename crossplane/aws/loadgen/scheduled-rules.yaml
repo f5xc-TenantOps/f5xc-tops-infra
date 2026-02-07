@@ -47,7 +47,7 @@ spec:
         launchType: FARGATE
         platformVersion: LATEST
         networkConfiguration:
-          - assignPublicIp: ENABLED
+          - assignPublicIp: true
             subnets:
               - subnet-placeholder-1
               - subnet-placeholder-2
@@ -104,7 +104,7 @@ spec:
         launchType: FARGATE
         platformVersion: LATEST
         networkConfiguration:
-          - assignPublicIp: ENABLED
+          - assignPublicIp: true
             subnets:
               - subnet-placeholder-1
               - subnet-placeholder-2

@@ -17,8 +17,7 @@ spec:
     memory: "1024"
     executionRoleArnRef:
       name: tops-loadgen-v2-execution-role
-    taskRoleArnRef:
-      name: tops-loadgen-v2-task-role
+    taskRoleArn: arn:aws:iam::430171053948:role/tops-loadgen-v2-task-role
     containerDefinitions: |
       [
         {

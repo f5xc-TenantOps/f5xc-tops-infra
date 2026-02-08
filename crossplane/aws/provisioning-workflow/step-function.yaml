@@ -149,12 +149,12 @@ spec:
             "Type": "Choice",
             "Choices": [
               {
-                "Variable": "$.resources_result.status",
+                "Variable": "$.resources_result.body.status",
                 "StringEquals": "failed",
                 "Next": "MarkFailed"
               },
               {
-                "Variable": "$.resources_result.status",
+                "Variable": "$.resources_result.body.status",
                 "StringEquals": "partial",
                 "Next": "MarkPartial"
               }
@@ -178,7 +178,7 @@ spec:
               "job_execution_id.$": "$.job_execution_id",
               "email.$": "$.email",
               "petname.$": "$.petname",
-              "resources_result.$": "$.resources_result"
+              "resources_result.$": "$.resources_result.body"
             },
             "End": true
           },

@@ -5,20 +5,20 @@
 # Lambda Functions for Provisioning Workflow
 # =============================================================================
 
-# fetch_job_config Lambda
-data "aws_s3_object" "fetch_job_config_zip" {
+# prepare_job_config Lambda
+data "aws_s3_object" "prepare_job_config_zip" {
   bucket = aws_s3_bucket.lambda_bucket.bucket
-  key    = "fetch_job_config${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
+  key    = "prepare_job_config${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
 }
 
-resource "aws_lambda_function" "fetch_job_config_lambda" {
-  function_name    = "tops-fetch-job-config${var.environment == "prod" ? "" : "-${var.environment}"}"
+resource "aws_lambda_function" "prepare_job_config_lambda" {
+  function_name    = "tops-prepare-job-config${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.utility_lambda_role.arn
   runtime          = "python3.11"
   handler          = "function.handler"
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
-  s3_key           = "fetch_job_config${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
-  source_code_hash = data.aws_s3_object.fetch_job_config_zip.etag
+  s3_key           = "prepare_job_config${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
+  source_code_hash = data.aws_s3_object.prepare_job_config_zip.etag
   kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = var.lambda_timeout
@@ -293,7 +293,7 @@ resource "aws_iam_policy" "step_function_policy" {
           "lambda:InvokeFunction"
         ],
         Resource = [
-          aws_lambda_function.fetch_job_config_lambda.arn,
+          aws_lambda_function.prepare_job_config_lambda.arn,
           aws_lambda_function.ns_create_lambda.arn,
           aws_lambda_function.user_create_lambda.arn,
           aws_lambda_function.resource_orchestrator_lambda.arn
@@ -313,7 +313,7 @@ resource "aws_sfn_state_machine" "provisioning_workflow" {
   role_arn = aws_iam_role.step_function_role.arn
 
   definition = templatefile("${path.module}/stepfunction/provisioning-workflow.json", {
-    FetchJobConfigLambdaArn      = aws_lambda_function.fetch_job_config_lambda.arn
+    PrepareJobConfigLambdaArn      = aws_lambda_function.prepare_job_config_lambda.arn
     NsCreateLambdaArn            = aws_lambda_function.ns_create_lambda.arn
     UserCreateLambdaArn          = aws_lambda_function.user_create_lambda.arn
     ResourceOrchestratorLambdaArn = aws_lambda_function.resource_orchestrator_lambda.arn
@@ -494,9 +494,9 @@ output "provisioning_workflow_name" {
   value       = aws_sfn_state_machine.provisioning_workflow.name
 }
 
-output "fetch_job_config_lambda_arn" {
-  description = "ARN of the fetch_job_config Lambda"
-  value       = aws_lambda_function.fetch_job_config_lambda.arn
+output "prepare_job_config_lambda_arn" {
+  description = "ARN of the prepare_job_config Lambda"
+  value       = aws_lambda_function.prepare_job_config_lambda.arn
 }
 
 output "resource_orchestrator_lambda_arn" {

@@ -17,7 +17,7 @@ LAMBDAS=(
     "user_create"
     "user_remove"
     # Step Functions pipeline Lambdas
-    "fetch_job_config"
+    "prepare_job_config"
     "resource_orchestrator"
     "stream_to_stepfunction"
     "origin_pool_create"

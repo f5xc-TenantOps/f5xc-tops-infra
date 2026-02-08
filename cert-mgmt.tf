@@ -158,6 +158,7 @@ resource "aws_lambda_function" "cert_mgmt_mcn_lambda" {
   s3_bucket        = data.aws_s3_object.cert_mgmt_zip.bucket
   s3_key           = data.aws_s3_object.cert_mgmt_zip.key
   source_code_hash = data.aws_s3_object.cert_mgmt_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size
@@ -190,6 +191,7 @@ resource "aws_lambda_function" "cert_mgmt_app_lambda" {
   s3_bucket        = data.aws_s3_object.cert_mgmt_zip.bucket
   s3_key           = data.aws_s3_object.cert_mgmt_zip.key
   source_code_hash = data.aws_s3_object.cert_mgmt_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size
@@ -222,6 +224,7 @@ resource "aws_lambda_function" "cert_mgmt_sec_lambda" {
   s3_bucket        = data.aws_s3_object.cert_mgmt_zip.bucket
   s3_key           = data.aws_s3_object.cert_mgmt_zip.key
   source_code_hash = data.aws_s3_object.cert_mgmt_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size

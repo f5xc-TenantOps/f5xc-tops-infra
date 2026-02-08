@@ -96,6 +96,7 @@ resource "aws_lambda_function" "acme_client_mcn_lambda" {
   s3_bucket        = data.aws_s3_object.acme_client_zip.bucket
   s3_key           = data.aws_s3_object.acme_client_zip.key
   source_code_hash = data.aws_s3_object.acme_client_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = 180
   memory_size = var.lambda_memory_size
@@ -137,6 +138,7 @@ resource "aws_lambda_function" "acme_client_app_lambda" {
   s3_bucket        = data.aws_s3_object.acme_client_zip.bucket
   s3_key           = data.aws_s3_object.acme_client_zip.key
   source_code_hash = data.aws_s3_object.acme_client_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = 180
   memory_size = var.lambda_memory_size
@@ -178,6 +180,7 @@ resource "aws_lambda_function" "acme_client_sec_lambda" {
   s3_bucket        = data.aws_s3_object.acme_client_zip.bucket
   s3_key           = data.aws_s3_object.acme_client_zip.key
   source_code_hash = data.aws_s3_object.acme_client_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = 180
   memory_size = var.lambda_memory_size

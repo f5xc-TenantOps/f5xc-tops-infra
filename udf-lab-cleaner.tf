@@ -73,10 +73,11 @@ resource "aws_lambda_function" "udf_lab_cleaner_lambda" {
   function_name    = "tops-udf-cleaner${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.udf_cleaner_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = data.aws_s3_object.udf_cleaner_zip.bucket
   s3_key           = data.aws_s3_object.udf_cleaner_zip.key
   source_code_hash = data.aws_s3_object.udf_cleaner_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size

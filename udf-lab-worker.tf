@@ -154,6 +154,7 @@ resource "aws_lambda_function" "udf_worker_lambda" {
   s3_bucket        = data.aws_s3_object.udf_worker_zip.bucket
   s3_key           = data.aws_s3_object.udf_worker_zip.key
   source_code_hash = data.aws_s3_object.udf_worker_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   environment {
     variables = {
@@ -183,8 +184,15 @@ resource "aws_lambda_event_source_mapping" "udf_worker_dynamodb_trigger" {
   event_source_arn  = aws_dynamodb_table.lab_deployment_state.stream_arn
   starting_position = "LATEST"
   batch_size        = 1
-  maximum_retry_attempts = 0
+  maximum_retry_attempts            = 3
+  bisect_batch_on_function_error    = true
   enabled           = true
+
+  destination_config {
+    on_failure {
+      destination_arn = aws_sqs_queue.udf_dlq.arn
+    }
+  }
 
   filter_criteria {
     filter {

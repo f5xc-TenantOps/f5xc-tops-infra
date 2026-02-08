@@ -19,6 +19,7 @@ resource "aws_lambda_function" "fetch_job_config_lambda" {
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "fetch_job_config${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.fetch_job_config_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size
@@ -47,6 +48,7 @@ resource "aws_lambda_function" "resource_orchestrator_lambda" {
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "resource_orchestrator${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.resource_orchestrator_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = 300 # 5 minutes for orchestration
   memory_size = 256
@@ -76,6 +78,7 @@ resource "aws_lambda_function" "origin_pool_create_lambda" {
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "origin_pool_create${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.origin_pool_create_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size
@@ -104,6 +107,7 @@ resource "aws_lambda_function" "http_lb_create_lambda" {
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "http_lb_create${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.http_lb_create_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size
@@ -132,6 +136,7 @@ resource "aws_lambda_function" "waf_policy_create_lambda" {
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "waf_policy_create${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.waf_policy_create_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size
@@ -438,6 +443,7 @@ resource "aws_lambda_function" "stream_to_stepfunction_lambda" {
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "stream_to_stepfunction${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.stream_to_stepfunction_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size

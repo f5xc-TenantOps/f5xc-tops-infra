@@ -64,6 +64,7 @@ resource "aws_lambda_function" "token_refresh_mcn_lambda" {
   s3_bucket        = data.aws_s3_object.token_refresh_zip.bucket
   s3_key           = data.aws_s3_object.token_refresh_zip.key
   source_code_hash = data.aws_s3_object.token_refresh_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size
@@ -108,6 +109,7 @@ resource "aws_lambda_function" "token_refresh_sec_lambda" {
   s3_bucket        = data.aws_s3_object.token_refresh_zip.bucket
   s3_key           = data.aws_s3_object.token_refresh_zip.key
   source_code_hash = data.aws_s3_object.token_refresh_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size
@@ -153,6 +155,7 @@ resource "aws_lambda_function" "token_refresh_app_lambda" {
   s3_bucket        = data.aws_s3_object.token_refresh_zip.bucket
   s3_key           = data.aws_s3_object.token_refresh_zip.key
   source_code_hash = data.aws_s3_object.token_refresh_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size

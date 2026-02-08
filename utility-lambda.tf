@@ -81,6 +81,7 @@ resource "aws_lambda_function" "user_create_lambda" {
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "user_create${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.user_create_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size
@@ -109,6 +110,7 @@ resource "aws_lambda_function" "user_remove_lambda" {
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "user_remove${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.user_remove_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size
@@ -136,6 +138,7 @@ resource "aws_lambda_function" "ns_create_lambda" {
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "ns_create${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.ns_create_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size
@@ -163,6 +166,7 @@ resource "aws_lambda_function" "ns_remove_lambda" {
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "ns_remove${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.ns_remove_zip.etag
+  kms_key_arn      = aws_kms_key.lambda_encryption.arn
 
   timeout     = var.lambda_timeout
   memory_size = var.lambda_memory_size

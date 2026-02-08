@@ -5,7 +5,7 @@
     "FetchJobConfig": {
       "Type": "Task",
       "Resource": "${FetchJobConfigLambdaArn}",
-      "ResultPath": "$",
+      "ResultPath": "$.fetch_result",
       "Next": "InitializeJobState",
       "Catch": [
         {
@@ -18,11 +18,11 @@
     "InitializeJobState": {
       "Type": "Pass",
       "Parameters": {
-        "job_config.$": "$.job_config",
-        "variables.$": "$.variables",
+        "job_config.$": "$.fetch_result.body.job_config",
+        "variables.$": "$.fetch_result.body.variables",
         "email.$": "$.email",
         "petname.$": "$.petname",
-        "ssm_base_path.$": "$.ssm_base_path",
+        "ssm_base_path.$": "$.fetch_result.body.ssm_base_path",
         "job_execution_id.$": "$$.Execution.Name",
         "status": "IN_PROGRESS",
         "job_state.$": "$.job_state",

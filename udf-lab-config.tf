@@ -311,6 +311,38 @@ EOT
 }
 
 ########################################
+# VIBE Lab (app tenant)                #
+########################################
+resource "aws_dynamodb_table_item" "lab_811c6767" {
+  table_name = aws_dynamodb_table.lab_configuration.name
+  hash_key   = "lab_id"
+
+  item = jsonencode({
+    lab_id          = { S = "811c6767" }
+    description     = { S = "VIBE Lab" }
+    ssm_base_path   = { S = "/tenantOps${var.environment == "prod" ? "" : "-${var.environment}"}/app-lab" }
+    group_names     = { L = [
+      { S = "xc-lab-users" }
+    ]}
+    namespace_roles = { L = [] }
+    user_ns         = { BOOL = true }
+    pre_lambda      = { S = "${aws_lambda_function.vibelab_pre_lambda.arn}" }
+    post_lambda     = { NULL = true }
+  })
+}
+
+resource "aws_s3_object" "lab_info_811c6767" {
+  bucket  = aws_s3_bucket.lab_registry_bucket.bucket
+  key     = "811c6767.yaml"
+  content = <<EOT
+lab_id: 811c6767
+sqsURL: "${aws_sqs_queue.udf_queue.url}"
+EOT
+
+  content_type = "text/yaml"
+}
+
+########################################
 # WAAP Lab                             #
 ########################################
 resource "aws_dynamodb_table_item" "lab_d3c24766" {

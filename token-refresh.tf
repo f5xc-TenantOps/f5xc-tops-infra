@@ -60,7 +60,7 @@ resource "aws_lambda_function" "token_refresh_mcn_lambda" {
   function_name    = "tops-token-refresh-mcn${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.token_refresh_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = data.aws_s3_object.token_refresh_zip.bucket
   s3_key           = data.aws_s3_object.token_refresh_zip.key
   source_code_hash = data.aws_s3_object.token_refresh_zip.etag
@@ -105,7 +105,7 @@ resource "aws_lambda_function" "token_refresh_sec_lambda" {
   function_name    = "tops-token-refresh-sec${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.token_refresh_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = data.aws_s3_object.token_refresh_zip.bucket
   s3_key           = data.aws_s3_object.token_refresh_zip.key
   source_code_hash = data.aws_s3_object.token_refresh_zip.etag
@@ -151,7 +151,7 @@ resource "aws_lambda_function" "token_refresh_app_lambda" {
   function_name    = "tops-token-refresh-app${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.token_refresh_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = data.aws_s3_object.token_refresh_zip.bucket
   s3_key           = data.aws_s3_object.token_refresh_zip.key
   source_code_hash = data.aws_s3_object.token_refresh_zip.etag

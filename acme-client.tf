@@ -92,7 +92,7 @@ resource "aws_lambda_function" "acme_client_mcn_lambda" {
   function_name    = "tops-acme-client-mcn${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.acme_client_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = data.aws_s3_object.acme_client_zip.bucket
   s3_key           = data.aws_s3_object.acme_client_zip.key
   source_code_hash = data.aws_s3_object.acme_client_zip.etag
@@ -134,7 +134,7 @@ resource "aws_lambda_function" "acme_client_app_lambda" {
   function_name    = "tops-acme-client-app${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.acme_client_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = data.aws_s3_object.acme_client_zip.bucket
   s3_key           = data.aws_s3_object.acme_client_zip.key
   source_code_hash = data.aws_s3_object.acme_client_zip.etag
@@ -176,7 +176,7 @@ resource "aws_lambda_function" "acme_client_sec_lambda" {
   function_name    = "tops-acme-client-sec${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.acme_client_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = data.aws_s3_object.acme_client_zip.bucket
   s3_key           = data.aws_s3_object.acme_client_zip.key
   source_code_hash = data.aws_s3_object.acme_client_zip.etag

@@ -15,7 +15,7 @@ resource "aws_lambda_function" "fetch_job_config_lambda" {
   function_name    = "tops-fetch-job-config${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.utility_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "fetch_job_config${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.fetch_job_config_zip.etag
@@ -44,7 +44,7 @@ resource "aws_lambda_function" "resource_orchestrator_lambda" {
   function_name    = "tops-resource-orchestrator${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.provisioning_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "resource_orchestrator${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.resource_orchestrator_zip.etag
@@ -74,7 +74,7 @@ resource "aws_lambda_function" "origin_pool_create_lambda" {
   function_name    = "tops-origin-pool-create${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.utility_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "origin_pool_create${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.origin_pool_create_zip.etag
@@ -103,7 +103,7 @@ resource "aws_lambda_function" "http_lb_create_lambda" {
   function_name    = "tops-http-lb-create${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.utility_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "http_lb_create${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.http_lb_create_zip.etag
@@ -132,7 +132,7 @@ resource "aws_lambda_function" "waf_policy_create_lambda" {
   function_name    = "tops-waf-policy-create${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.utility_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "waf_policy_create${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.waf_policy_create_zip.etag
@@ -439,7 +439,7 @@ resource "aws_lambda_function" "stream_to_stepfunction_lambda" {
   function_name    = "tops-stream-to-sfn${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.stream_to_stepfunction_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "stream_to_stepfunction${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.stream_to_stepfunction_zip.etag

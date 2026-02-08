@@ -154,7 +154,7 @@ resource "aws_lambda_function" "cert_mgmt_mcn_lambda" {
   function_name    = "tops-cert-mgmt-mcn${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.cert_mgmt_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = data.aws_s3_object.cert_mgmt_zip.bucket
   s3_key           = data.aws_s3_object.cert_mgmt_zip.key
   source_code_hash = data.aws_s3_object.cert_mgmt_zip.etag
@@ -187,7 +187,7 @@ resource "aws_lambda_function" "cert_mgmt_app_lambda" {
   function_name    = "tops-cert-mgmt-app${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.cert_mgmt_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = data.aws_s3_object.cert_mgmt_zip.bucket
   s3_key           = data.aws_s3_object.cert_mgmt_zip.key
   source_code_hash = data.aws_s3_object.cert_mgmt_zip.etag
@@ -220,7 +220,7 @@ resource "aws_lambda_function" "cert_mgmt_sec_lambda" {
   function_name    = "tops-cert-mgmt-sec${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.cert_mgmt_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = data.aws_s3_object.cert_mgmt_zip.bucket
   s3_key           = data.aws_s3_object.cert_mgmt_zip.key
   source_code_hash = data.aws_s3_object.cert_mgmt_zip.etag

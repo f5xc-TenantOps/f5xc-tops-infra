@@ -77,7 +77,7 @@ resource "aws_lambda_function" "user_create_lambda" {
   function_name    = "tops-user-create${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.utility_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "user_create${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.user_create_zip.etag
@@ -106,7 +106,7 @@ resource "aws_lambda_function" "user_remove_lambda" {
   function_name    = "tops-user-remove${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.utility_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "user_remove${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.user_remove_zip.etag
@@ -134,7 +134,7 @@ resource "aws_lambda_function" "ns_create_lambda" {
   function_name    = "tops-ns-create${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.utility_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "ns_create${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.ns_create_zip.etag
@@ -162,7 +162,7 @@ resource "aws_lambda_function" "ns_remove_lambda" {
   function_name    = "tops-ns-remove${var.environment == "prod" ? "" : "-${var.environment}"}"
   role             = aws_iam_role.utility_lambda_role.arn
   runtime          = "python3.11"
-  handler          = "function.lambda_handler"
+  handler          = "function.handler"
   s3_bucket        = aws_s3_bucket.lambda_bucket.bucket
   s3_key           = "ns_remove${var.environment == "prod" ? "" : "_${var.environment}"}.zip"
   source_code_hash = data.aws_s3_object.ns_remove_zip.etag

@@ -79,6 +79,22 @@ spec:
               "sqs:ChangeMessageVisibility"
             ],
             "Resource": "arn:aws:sqs:us-east-1:430171053948:f5xc-tops-global-logs-notifications"
+          },
+          {
+            "Sid": "CloudWatchLogsRead",
+            "Effect": "Allow",
+            "Action": [
+              "logs:FilterLogEvents",
+              "logs:GetLogEvents",
+              "logs:DescribeLogGroups",
+              "logs:DescribeLogStreams",
+              "logs:StartQuery",
+              "logs:GetQueryResults"
+            ],
+            "Resource": [
+              "arn:aws:logs:us-east-1:430171053948:log-group:/aws/lambda/tops-*:*",
+              "arn:aws:logs:us-east-1:430171053948:log-group:/aws/states/tops-*:*"
+            ]
           }
         ]
       }

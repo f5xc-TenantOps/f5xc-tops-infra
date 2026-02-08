@@ -1,0 +1,105 @@
+---
+apiVersion: sfn.aws.upbound.io/v1beta2
+kind: StateMachine
+metadata:
+  name: tops-cleanup-workflow-v2
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: cleanup-step-function
+spec:
+  forProvider:
+    region: us-east-1
+    roleArnRef:
+      name: tops-cleanup-sfn-role-v2
+    loggingConfiguration:
+      includeExecutionData: true
+      level: ERROR
+      logDestination: arn:aws:logs:us-east-1:430171053948:log-group:/aws/states/tops-cleanup-workflow-v2:*
+    definition: |
+      {
+        "Comment": "TenantOps Cleanup Workflow - handles REMOVE events. Namespace deletion cascades to all namespaced resources.",
+        "StartAt": "CheckUserEnabled",
+        "States": {
+          "CheckUserEnabled": {
+            "Type": "Choice",
+            "Choices": [
+              {
+                "And": [
+                  {
+                    "Variable": "$.user_enabled",
+                    "BooleanEquals": true
+                  },
+                  {
+                    "Variable": "$.skip_user_removal",
+                    "BooleanEquals": false
+                  }
+                ],
+                "Next": "DeleteUser"
+              }
+            ],
+            "Default": "CheckNamespaceEnabled"
+          },
+          "DeleteUser": {
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:us-east-1:430171053948:function:tops-user-remove-v2",
+            "Parameters": {
+              "ssm_base_path.$": "$.ssm_base_path",
+              "email.$": "$.email"
+            },
+            "ResultPath": "$.user_result",
+            "Next": "CheckNamespaceEnabled",
+            "Catch": [
+              {
+                "ErrorEquals": ["States.ALL"],
+                "ResultPath": "$.user_error",
+                "Next": "CheckNamespaceEnabled"
+              }
+            ]
+          },
+          "CheckNamespaceEnabled": {
+            "Type": "Choice",
+            "Choices": [
+              {
+                "Variable": "$.namespace_enabled",
+                "BooleanEquals": true,
+                "Next": "DeleteNamespace"
+              }
+            ],
+            "Default": "CleanupComplete"
+          },
+          "DeleteNamespace": {
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:us-east-1:430171053948:function:tops-ns-remove-v2",
+            "Parameters": {
+              "ssm_base_path.$": "$.ssm_base_path",
+              "namespace_name.$": "$.petname"
+            },
+            "ResultPath": "$.namespace_result",
+            "Next": "CleanupComplete",
+            "Catch": [
+              {
+                "ErrorEquals": ["States.ALL"],
+                "ResultPath": "$.namespace_error",
+                "Next": "CleanupComplete"
+              }
+            ]
+          },
+          "CleanupComplete": {
+            "Type": "Pass",
+            "Parameters": {
+              "status": "CLEANUP_COMPLETED",
+              "dep_id.$": "$.dep_id",
+              "email.$": "$.email",
+              "petname.$": "$.petname"
+            },
+            "End": true
+          }
+        }
+      }
+    tags:
+      Name: tops-cleanup-workflow-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default

@@ -1,6 +1,6 @@
 ---
 # DynamoDB Stream trigger for UDF Worker Lambda
-# IMPORTANT: Disabled initially, will enable during cutover
+# DISABLED: Replaced by stream_to_stepfunction → Step Functions workflow
 apiVersion: lambda.aws.upbound.io/v1beta1
 kind: EventSourceMapping
 metadata:

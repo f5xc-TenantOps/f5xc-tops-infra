@@ -13,7 +13,7 @@ spec:
       name: tops-provisioning-sfn-role-v2
     loggingConfiguration:
       includeExecutionData: true
-      level: ERROR
+      level: ALL
       logDestination: arn:aws:logs:us-east-1:430171053948:log-group:/aws/states/tops-provisioning-workflow-v2:*
     definition: |
       {

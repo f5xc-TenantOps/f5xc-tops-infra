@@ -78,7 +78,28 @@ spec:
               "sqs:GetQueueUrl",
               "sqs:ChangeMessageVisibility"
             ],
-            "Resource": "arn:aws:sqs:us-east-1:430171053948:f5xc-tops-global-logs-notifications"
+            "Resource": [
+              "arn:aws:sqs:us-east-1:430171053948:f5xc-tops-global-logs-notifications",
+              "arn:aws:sqs:us-east-1:430171053948:tops-cloudwatch-export-notifications-v2"
+            ]
+          },
+          {
+            "Sid": "ListCloudwatchExportBucket",
+            "Effect": "Allow",
+            "Action": [
+              "s3:ListBucket",
+              "s3:GetBucketLocation"
+            ],
+            "Resource": "arn:aws:s3:::tops-cloudwatch-export-v2"
+          },
+          {
+            "Sid": "ReadCloudwatchExportObjects",
+            "Effect": "Allow",
+            "Action": [
+              "s3:GetObject",
+              "s3:GetObjectVersion"
+            ],
+            "Resource": "arn:aws:s3:::tops-cloudwatch-export-v2/*"
           },
           {
             "Sid": "CloudWatchLogsRead",

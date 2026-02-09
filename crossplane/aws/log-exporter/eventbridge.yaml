@@ -1,0 +1,61 @@
+---
+# EventBridge schedule for log exporter Lambda
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Rule
+metadata:
+  name: tops-log-exporter-schedule-v2
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: log-exporter-eventbridge
+spec:
+  forProvider:
+    region: us-east-1
+    eventBusName: default
+    description: Scheduled trigger for CloudWatch log exporter Lambda (every 5 minutes)
+    scheduleExpression: "rate(5 minutes)"
+    state: ENABLED
+    tags:
+      Name: tops-log-exporter-schedule-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-observability
+  providerConfigRef:
+    name: default
+---
+apiVersion: cloudwatchevents.aws.upbound.io/v1beta1
+kind: Target
+metadata:
+  name: tops-log-exporter-target-v2
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: log-exporter-eventbridge
+spec:
+  forProvider:
+    region: us-east-1
+    eventBusName: default
+    ruleRef:
+      name: tops-log-exporter-schedule-v2
+    targetId: tops-log-exporter-v2
+    arn: arn:aws:lambda:us-east-1:430171053948:function:tops-log-exporter-v2
+  providerConfigRef:
+    name: default
+---
+# Lambda permission for EventBridge to invoke the log exporter
+apiVersion: lambda.aws.upbound.io/v1beta1
+kind: Permission
+metadata:
+  name: tops-log-exporter-eventbridge-permission-v2
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: log-exporter-eventbridge
+spec:
+  forProvider:
+    region: us-east-1
+    action: lambda:InvokeFunction
+    functionNameRef:
+      name: tops-log-exporter-v2
+    principal: events.amazonaws.com
+    sourceArn: arn:aws:events:us-east-1:430171053948:rule/tops-log-exporter-schedule-v2
+    statementId: AllowExecutionFromCloudWatch-v2
+  providerConfigRef:
+    name: default

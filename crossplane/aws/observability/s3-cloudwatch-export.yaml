@@ -1,0 +1,174 @@
+---
+# S3 bucket for CloudWatch log export (Lambda/Step Function logs)
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: Bucket
+metadata:
+  name: tops-cloudwatch-export-v2
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: s3-cloudwatch-export
+spec:
+  forProvider:
+    region: us-east-1
+    tags:
+      Name: tops-cloudwatch-export-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-observability
+  providerConfigRef:
+    name: default
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketVersioning
+metadata:
+  name: tops-cloudwatch-export-v2-versioning
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: s3-cloudwatch-export
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: tops-cloudwatch-export-v2
+    versioningConfiguration:
+      - status: Disabled
+  providerConfigRef:
+    name: default
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketLifecycleConfiguration
+metadata:
+  name: tops-cloudwatch-export-v2-lifecycle
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: s3-cloudwatch-export
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: tops-cloudwatch-export-v2
+    rule:
+      - id: expire-transient-logs
+        status: Enabled
+        expiration:
+          - days: 7
+        noncurrentVersionExpiration:
+          - noncurrentDays: 1
+  providerConfigRef:
+    name: default
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketServerSideEncryptionConfiguration
+metadata:
+  name: tops-cloudwatch-export-v2-encryption
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: s3-cloudwatch-export
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: tops-cloudwatch-export-v2
+    rule:
+      - applyServerSideEncryptionByDefault:
+          - sseAlgorithm: AES256
+  providerConfigRef:
+    name: default
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketPublicAccessBlock
+metadata:
+  name: tops-cloudwatch-export-v2-public-access
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: s3-cloudwatch-export
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: tops-cloudwatch-export-v2
+    blockPublicAcls: true
+    blockPublicPolicy: true
+    ignorePublicAcls: true
+    restrictPublicBuckets: true
+  providerConfigRef:
+    name: default
+---
+# SQS queue for S3 event notifications (consumed by Vector)
+apiVersion: sqs.aws.upbound.io/v1beta1
+kind: Queue
+metadata:
+  name: tops-cloudwatch-export-notifications-v2
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: sqs-cloudwatch-export
+spec:
+  forProvider:
+    name: tops-cloudwatch-export-notifications-v2
+    region: us-east-1
+    messageRetentionSeconds: 86400
+    visibilityTimeoutSeconds: 300
+    tags:
+      Name: tops-cloudwatch-export-notifications-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-observability
+  providerConfigRef:
+    name: default
+---
+# SQS queue policy allowing S3 to send notifications
+apiVersion: sqs.aws.upbound.io/v1beta1
+kind: QueuePolicy
+metadata:
+  name: tops-cloudwatch-export-notifications-v2-policy
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: sqs-cloudwatch-export
+spec:
+  forProvider:
+    region: us-east-1
+    queueUrlRef:
+      name: tops-cloudwatch-export-notifications-v2
+    policy: |
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Sid": "AllowS3SendMessage",
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "s3.amazonaws.com"
+            },
+            "Action": "sqs:SendMessage",
+            "Resource": "arn:aws:sqs:us-east-1:430171053948:tops-cloudwatch-export-notifications-v2",
+            "Condition": {
+              "ArnEquals": {
+                "aws:SourceArn": "arn:aws:s3:::tops-cloudwatch-export-v2"
+              }
+            }
+          }
+        ]
+      }
+  providerConfigRef:
+    name: default
+---
+# S3 bucket notification to send events to SQS
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketNotification
+metadata:
+  name: tops-cloudwatch-export-v2-notification
+  labels:
+    app.kubernetes.io/name: tops-observability
+    app.kubernetes.io/component: s3-cloudwatch-export
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: tops-cloudwatch-export-v2
+    queue:
+      - events:
+          - s3:ObjectCreated:*
+        queueArnRef:
+          name: tops-cloudwatch-export-notifications-v2
+  providerConfigRef:
+    name: default

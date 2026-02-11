@@ -36,7 +36,7 @@ spec:
   providerConfigRef:
     name: default
 ---
-# Note: Update the PrincipalOrgPaths value to match your organization path
+# PrincipalOrgPaths is substituted at sync time by the envsubst CMP plugin
 apiVersion: s3.aws.upbound.io/v1beta1
 kind: BucketPolicy
 metadata:
@@ -59,7 +59,7 @@ spec:
             "Principal": "*",
             "Condition": {
               "ForAnyValue:StringLike": {
-                "aws:PrincipalOrgPaths": "UDF_PRINCIPAL_ORG_PATH_PLACEHOLDER"
+                "aws:PrincipalOrgPaths": "${UDF_ORG_PATH}"
               }
             },
             "Action": [
@@ -74,7 +74,7 @@ spec:
             "Principal": "*",
             "Condition": {
               "ForAnyValue:StringLike": {
-                "aws:PrincipalOrgPaths": "UDF_PRINCIPAL_ORG_PATH_PLACEHOLDER"
+                "aws:PrincipalOrgPaths": "${UDF_ORG_PATH}"
               }
             },
             "Action": [

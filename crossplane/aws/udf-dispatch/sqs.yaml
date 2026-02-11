@@ -78,7 +78,7 @@ spec:
             "Resource": "*",
             "Condition": {
               "ForAnyValue:StringLike": {
-                "aws:PrincipalOrgPaths": "o-xpyhj4c5kj/*"
+                "aws:PrincipalOrgPaths": "${UDF_ORG_PATH}"
               }
             }
           }

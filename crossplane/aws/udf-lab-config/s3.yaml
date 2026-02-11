@@ -86,3 +86,25 @@ spec:
       }
   providerConfigRef:
     name: default
+---
+apiVersion: s3.aws.upbound.io/v1beta1
+kind: BucketObject
+metadata:
+  name: tops-registry-bucket-v2-config-json
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: s3-lab-registry
+spec:
+  forProvider:
+    region: us-east-1
+    bucketRef:
+      name: tops-registry-bucket-v2
+    key: config.json
+    contentType: application/json
+    content: |
+      {
+        "sqsURL": "https://sqs.us-east-1.amazonaws.com/430171053948/tops-udf-queue-v2",
+        "stateBucket": "tops-deployment-state-v2"
+      }
+  providerConfigRef:
+    name: default

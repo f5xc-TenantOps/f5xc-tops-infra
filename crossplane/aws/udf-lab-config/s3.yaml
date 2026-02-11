@@ -30,9 +30,9 @@ spec:
     bucketRef:
       name: tops-registry-bucket-v2
     blockPublicAcls: true
-    blockPublicPolicy: true
+    blockPublicPolicy: false
     ignorePublicAcls: true
-    restrictPublicBuckets: true
+    restrictPublicBuckets: false
   providerConfigRef:
     name: default
 ---

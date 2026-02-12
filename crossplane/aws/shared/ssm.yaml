@@ -122,6 +122,126 @@ spec:
     name: default
 ---
 # =============================================================================
+# wtit-msp tenant parameters
+# =============================================================================
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-wtit-msp-tenant-url-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/wtit-msp/tenant-url
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: String
+    insecureValue: "https://wt-msp-appw2026t.console.ves.volterra.io"
+    tags:
+      Name: tops-ssm-wtit-msp-tenant-url-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-wtit-msp-idm-type-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/wtit-msp/idm-type
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: String
+    insecureValue: "USER"
+    tags:
+      Name: tops-ssm-wtit-msp-idm-type-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-wtit-msp-token-name-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/wtit-msp/token-name
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: String
+    valueSecretRef:
+      key: value
+      name: tops-wtit-msp-token-name-v2
+      namespace: crossplane-system
+    tags:
+      Name: tops-ssm-wtit-msp-token-name-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-wtit-msp-token-type-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/wtit-msp/token-type
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: String
+    insecureValue: "svccred"
+    tags:
+      Name: tops-ssm-wtit-msp-token-type-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-wtit-msp-token-value-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/wtit-msp/token-value
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: SecureString
+    valueSecretRef:
+      key: value
+      name: tops-wtit-msp-token-value-v2
+      namespace: crossplane-system
+    tags:
+      Name: tops-ssm-wtit-msp-token-value-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+# =============================================================================
 # mcn-lab tenant parameters
 # =============================================================================
 ---

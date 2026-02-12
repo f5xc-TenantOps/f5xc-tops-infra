@@ -160,7 +160,7 @@ spec:
   forProvider:
     region: us-east-1
     type: String
-    insecureValue: "USER"
+    insecureValue: "VOLTERRA_MANAGED"
     tags:
       Name: tops-ssm-wtit-msp-idm-type-v2
       Environment: production

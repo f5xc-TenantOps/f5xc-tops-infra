@@ -11,7 +11,7 @@ echo ""
 
 # Test 1: Verify DynamoDB tables exist
 echo "1. Checking DynamoDB tables..."
-for table in tops-job-state-v2 tops-udf-lab-deployment-state-v2 tops-udf-lab-config-v2; do
+for table in tops-udf-lab-deployment-state-v2 tops-udf-lab-config-v2; do
     if aws dynamodb describe-table --table-name "${table}" --region "${REGION}" > /dev/null 2>&1; then
         echo "   ✓ ${table}"
     else

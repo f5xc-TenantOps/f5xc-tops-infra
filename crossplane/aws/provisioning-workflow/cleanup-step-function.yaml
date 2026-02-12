@@ -90,7 +90,8 @@ spec:
               "status": "CLEANUP_COMPLETED",
               "dep_id.$": "$.dep_id",
               "email.$": "$.email",
-              "petname.$": "$.petname"
+              "petname.$": "$.petname",
+              "resources.$": "$.resources"
             },
             "End": true
           }

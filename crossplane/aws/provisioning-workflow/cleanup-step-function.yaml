@@ -65,7 +65,7 @@ spec:
                 "Next": "DeleteNamespace"
               }
             ],
-            "Default": "CleanupComplete"
+            "Default": "DeleteSite"
           },
           "DeleteNamespace": {
             "Type": "Task",
@@ -75,11 +75,28 @@ spec:
               "namespace_name.$": "$.petname"
             },
             "ResultPath": "$.namespace_result",
-            "Next": "CleanupComplete",
+            "Next": "DeleteSite",
             "Catch": [
               {
                 "ErrorEquals": ["States.ALL"],
                 "ResultPath": "$.namespace_error",
+                "Next": "DeleteSite"
+              }
+            ]
+          },
+          "DeleteSite": {
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:us-east-1:430171053948:function:tops-securemesh-site-v2-remove-v2",
+            "Parameters": {
+              "ssm_base_path.$": "$.ssm_base_path",
+              "site_name.$": "States.Format('{}-site', $.petname)"
+            },
+            "ResultPath": "$.site_result",
+            "Next": "CleanupComplete",
+            "Catch": [
+              {
+                "ErrorEquals": ["States.ALL"],
+                "ResultPath": "$.site_error",
                 "Next": "CleanupComplete"
               }
             ]

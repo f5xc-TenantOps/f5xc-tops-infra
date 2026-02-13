@@ -72,6 +72,14 @@ spec:
             },
             "ResultPath": "$.namespace_result",
             "Next": "UpdateJobStateAfterNamespace",
+            "Retry": [
+              {
+                "ErrorEquals": ["States.TaskFailed"],
+                "IntervalSeconds": 3,
+                "MaxAttempts": 2,
+                "BackoffRate": 2.0
+              }
+            ],
             "Catch": [
               {
                 "ErrorEquals": ["States.ALL"],
@@ -112,6 +120,14 @@ spec:
             },
             "ResultPath": "$.user_result",
             "Next": "UpdateJobStateAfterUser",
+            "Retry": [
+              {
+                "ErrorEquals": ["States.TaskFailed"],
+                "IntervalSeconds": 3,
+                "MaxAttempts": 2,
+                "BackoffRate": 2.0
+              }
+            ],
             "Catch": [
               {
                 "ErrorEquals": ["States.ALL"],
@@ -135,6 +151,22 @@ spec:
                 "Next": "ProcessResources"
               }
             ],
+            "Default": "CheckForErrors"
+          },
+          "CheckForErrors": {
+            "Type": "Choice",
+            "Choices": [
+              {
+                "Variable": "$.namespace_error",
+                "IsPresent": true,
+                "Next": "MarkStepsFailed"
+              },
+              {
+                "Variable": "$.user_error",
+                "IsPresent": true,
+                "Next": "MarkStepsFailed"
+              }
+            ],
             "Default": "MarkComplete"
           },
           "ProcessResources": {
@@ -149,6 +181,14 @@ spec:
             },
             "ResultPath": "$.resources_result",
             "Next": "CheckResourcesResult",
+            "Retry": [
+              {
+                "ErrorEquals": ["States.TaskFailed"],
+                "IntervalSeconds": 3,
+                "MaxAttempts": 2,
+                "BackoffRate": 2.0
+              }
+            ],
             "Catch": [
               {
                 "ErrorEquals": ["States.ALL"],
@@ -220,6 +260,17 @@ spec:
               "job_execution_id.$": "$.job_execution_id",
               "error.$": "$.resources_result.body",
               "job_state.$": "$.resources_result.body.job_state",
+              "lab_id.$": "$.lab_id",
+              "dep_id.$": "$.dep_id"
+            },
+            "Next": "FinalizeJob"
+          },
+          "MarkStepsFailed": {
+            "Type": "Pass",
+            "Parameters": {
+              "status": "FAILED",
+              "job_execution_id.$": "$.job_execution_id",
+              "job_state.$": "$.job_state",
               "lab_id.$": "$.lab_id",
               "dep_id.$": "$.dep_id"
             },

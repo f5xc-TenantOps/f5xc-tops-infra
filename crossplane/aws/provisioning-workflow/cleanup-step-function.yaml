@@ -48,6 +48,14 @@ spec:
             },
             "ResultPath": "$.user_result",
             "Next": "CheckNamespaceEnabled",
+            "Retry": [
+              {
+                "ErrorEquals": ["States.TaskFailed"],
+                "IntervalSeconds": 3,
+                "MaxAttempts": 2,
+                "BackoffRate": 2.0
+              }
+            ],
             "Catch": [
               {
                 "ErrorEquals": ["States.ALL"],
@@ -76,6 +84,14 @@ spec:
             },
             "ResultPath": "$.namespace_result",
             "Next": "DeleteSite",
+            "Retry": [
+              {
+                "ErrorEquals": ["States.TaskFailed"],
+                "IntervalSeconds": 3,
+                "MaxAttempts": 2,
+                "BackoffRate": 2.0
+              }
+            ],
             "Catch": [
               {
                 "ErrorEquals": ["States.ALL"],
@@ -93,6 +109,14 @@ spec:
             },
             "ResultPath": "$.site_result",
             "Next": "CleanupComplete",
+            "Retry": [
+              {
+                "ErrorEquals": ["States.TaskFailed"],
+                "IntervalSeconds": 3,
+                "MaxAttempts": 2,
+                "BackoffRate": 2.0
+              }
+            ],
             "Catch": [
               {
                 "ErrorEquals": ["States.ALL"],

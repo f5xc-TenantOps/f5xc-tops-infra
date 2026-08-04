@@ -1,0 +1,20 @@
+{
+  "lab_id": "d4e9e425",
+  "description": "MSP Core Lab",
+  "job_id": "msp-c-core",
+  "namespace": {
+    "enabled": true
+  },
+  "resources": [],
+  "ssm_base_path": "/tenantOps-v2/labs-msp-c-core",
+  "user": {
+    "enabled": true,
+    "group_names": [],
+    "namespace_roles": [
+      {
+        "namespace": "{{petname}}",
+        "role": "ves-io-admin-role"
+      }
+    ]
+  }
+}

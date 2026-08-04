@@ -42,3 +42,8 @@ terraform.rc
 .claude/
 .beads/
 AGENTS.md
+
+# TenantOps: local secret-creation scripts contain real XC tokens — never commit.
+# The tokenless .example template IS committed.
+provisioning/create-secrets.sh
+provisioning/*.secrets.sh

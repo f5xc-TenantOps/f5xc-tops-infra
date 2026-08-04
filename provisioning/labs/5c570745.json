@@ -1,0 +1,20 @@
+{
+  "lab_id": "5c570745",
+  "description": "MSP Secure Lab",
+  "job_id": "msp-c-secure",
+  "namespace": {
+    "enabled": true
+  },
+  "resources": [],
+  "ssm_base_path": "/tenantOps-v2/labs-msp-c-secure",
+  "user": {
+    "enabled": true,
+    "group_names": [],
+    "namespace_roles": [
+      {
+        "namespace": "{{petname}}",
+        "role": "ves-io-admin-role"
+      }
+    ]
+  }
+}

@@ -480,3 +480,363 @@ spec:
       Application: tops-core
   providerConfigRef:
     name: default
+---
+# =============================================================================
+# labs-msp-c-core tenant parameters
+# =============================================================================
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-labs-msp-c-core-tenant-url-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/labs-msp-c-core/tenant-url
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: String
+    insecureValue: "https://labs-msp-c-core.console.ves.volterra.io"
+    tags:
+      Name: tops-ssm-labs-msp-c-core-tenant-url-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-labs-msp-c-core-idm-type-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/labs-msp-c-core/idm-type
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: String
+    insecureValue: "VOLTERRA_MANAGED"
+    tags:
+      Name: tops-ssm-labs-msp-c-core-idm-type-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-labs-msp-c-core-token-name-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/labs-msp-c-core/token-name
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: String
+    valueSecretRef:
+      key: value
+      name: tops-labs-msp-c-core-token-name-v2
+      namespace: crossplane-system
+    tags:
+      Name: tops-ssm-labs-msp-c-core-token-name-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-labs-msp-c-core-token-type-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/labs-msp-c-core/token-type
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: String
+    insecureValue: "svccred"
+    tags:
+      Name: tops-ssm-labs-msp-c-core-token-type-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-labs-msp-c-core-token-value-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/labs-msp-c-core/token-value
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: SecureString
+    valueSecretRef:
+      key: value
+      name: tops-labs-msp-c-core-token-value-v2
+      namespace: crossplane-system
+    tags:
+      Name: tops-ssm-labs-msp-c-core-token-value-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+# =============================================================================
+# labs-msp-c-prog tenant parameters
+# =============================================================================
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-labs-msp-c-prog-tenant-url-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/labs-msp-c-prog/tenant-url
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: String
+    insecureValue: "https://labs-msp-c-prog.console.ves.volterra.io"
+    tags:
+      Name: tops-ssm-labs-msp-c-prog-tenant-url-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-labs-msp-c-prog-idm-type-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/labs-msp-c-prog/idm-type
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: String
+    insecureValue: "VOLTERRA_MANAGED"
+    tags:
+      Name: tops-ssm-labs-msp-c-prog-idm-type-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-labs-msp-c-prog-token-name-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/labs-msp-c-prog/token-name
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: String
+    valueSecretRef:
+      key: value
+      name: tops-labs-msp-c-prog-token-name-v2
+      namespace: crossplane-system
+    tags:
+      Name: tops-ssm-labs-msp-c-prog-token-name-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-labs-msp-c-prog-token-type-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/labs-msp-c-prog/token-type
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: String
+    insecureValue: "svccred"
+    tags:
+      Name: tops-ssm-labs-msp-c-prog-token-type-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-labs-msp-c-prog-token-value-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/labs-msp-c-prog/token-value
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: SecureString
+    valueSecretRef:
+      key: value
+      name: tops-labs-msp-c-prog-token-value-v2
+      namespace: crossplane-system
+    tags:
+      Name: tops-ssm-labs-msp-c-prog-token-value-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+# =============================================================================
+# labs-msp-c-secure tenant parameters
+# =============================================================================
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-labs-msp-c-secure-tenant-url-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/labs-msp-c-secure/tenant-url
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: String
+    insecureValue: "https://labs-msp-c-secure.console.ves.volterra.io"
+    tags:
+      Name: tops-ssm-labs-msp-c-secure-tenant-url-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-labs-msp-c-secure-idm-type-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/labs-msp-c-secure/idm-type
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: String
+    insecureValue: "VOLTERRA_MANAGED"
+    tags:
+      Name: tops-ssm-labs-msp-c-secure-idm-type-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-labs-msp-c-secure-token-name-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/labs-msp-c-secure/token-name
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: String
+    valueSecretRef:
+      key: value
+      name: tops-labs-msp-c-secure-token-name-v2
+      namespace: crossplane-system
+    tags:
+      Name: tops-ssm-labs-msp-c-secure-token-name-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-labs-msp-c-secure-token-type-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/labs-msp-c-secure/token-type
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: String
+    insecureValue: "svccred"
+    tags:
+      Name: tops-ssm-labs-msp-c-secure-token-type-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
+---
+apiVersion: ssm.aws.upbound.io/v1beta1
+kind: Parameter
+metadata:
+  name: tops-ssm-labs-msp-c-secure-token-value-v2
+  annotations:
+    crossplane.io/external-name: /tenantOps-v2/labs-msp-c-secure/token-value
+  labels:
+    app.kubernetes.io/name: tops-core-v2
+    app.kubernetes.io/component: ssm-parameters
+spec:
+  forProvider:
+    region: us-east-1
+    type: SecureString
+    valueSecretRef:
+      key: value
+      name: tops-labs-msp-c-secure-token-value-v2
+      namespace: crossplane-system
+    tags:
+      Name: tops-ssm-labs-msp-c-secure-token-value-v2
+      Environment: production
+      ManagedBy: crossplane
+      Application: tops-core
+  providerConfigRef:
+    name: default
